@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 shadow-2xl rounded-2xl;
+  }
+  .glass-card-hover {
+    @apply hover:border-blue-500/50 hover:shadow-blue-500/10 transition-all duration-300;
+  }
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-400 bg-clip-text text-transparent;
+  }
+  .gradient-btn {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all duration-200 active:scale-95;
+  }
+}
+
+/* ==========================================================================
+   MELLOW LOW-BRIGHTNESS & HIGH-PRECISION LIGHT MODE DESIGN SYSTEM (html:not(.dark))
+   Muted Anti-Glare Canvas with Ultra-Crisp Legible Typography
+   ========================================================================== */
+
+html:not(.dark) {
+  color-scheme: light;
+  background-color: #eaeff5;
+  color: #0f172a;
+}
+
+html:not(.dark) body {
+  background-color: #eaeff5;
+  color: #0f172a;
+}
+
+/* Main Layout & Canvas Overrides */
+html:not(.dark) main,
+html:not(.dark) .bg-slate-950 {
+  background-color: #eaeff5 !important;
+}
+
+html:not(.dark) header {
+  background-color: rgba(248, 250, 252, 0.95) !important;
+  border-bottom-color: #cbd5e1 !important;
+  box-shadow: 0 1px 4px 0 rgba(15, 23, 42, 0.05) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+html:not(.dark) aside {
+  background-color: #f8fafc !important;
+  border-right-color: #cbd5e1 !important;
+  box-shadow: 1px 0 4px 0 rgba(15, 23, 42, 0.03) !important;
+}
+
+/* Card & Surface Layering (Soft Anti-Glare Cards) */
+html:not(.dark) .glass-card,
+html:not(.dark) .bg-slate-900,
+html:not(.dark) .bg-slate-900\/80,
+html:not(.dark) .bg-slate-900\/60,
+html:not(.dark) .bg-slate-900\/50,
+html:not(.dark) .bg-slate-900\/40,
+html:not(.dark) .bg-slate-950\/60,
+html:not(.dark) .bg-slate-950\/80 {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.07), 0 2px 4px -1px rgba(15, 23, 42, 0.04) !important;
+}
+
+html:not(.dark) .bg-slate-800,
+html:not(.dark) .bg-slate-800\/80,
+html:not(.dark) .bg-slate-800\/60,
+html:not(.dark) .bg-slate-800\/50,
+html:not(.dark) .bg-slate-800\/40 {
+  background-color: #edf2f7 !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Banner Gradients in Light Mode (Muted Eye-Comfort Tints) */
+html:not(.dark) .from-blue-950\/60,
+html:not(.dark) .from-blue-950\/40,
+html:not(.dark) .from-indigo-950\/40,
+html:not(.dark) .from-purple-950\/40 {
+  background-image: linear-gradient(135deg, #ebf3fc 0%, #f8fafc 50%, #f5f0fb 100%) !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Metric Card Tints in Light Mode */
+html:not(.dark) .from-blue-500\/20 {
+  background-image: linear-gradient(135deg, #ebf3fc 0%, #f8fafc 100%) !important;
+  border-color: #93c5fd !important;
+}
+html:not(.dark) .from-emerald-500\/20 {
+  background-image: linear-gradient(135deg, #e6f7f0 0%, #f8fafc 100%) !important;
+  border-color: #6ee7b7 !important;
+}
+html:not(.dark) .from-purple-500\/20 {
+  background-image: linear-gradient(135deg, #f3ebfc 0%, #f8fafc 100%) !important;
+  border-color: #d8b4fe !important;
+}
+html:not(.dark) .from-amber-500\/20 {
+  background-image: linear-gradient(135deg, #fef7e6 0%, #f8fafc 100%) !important;
+  border-color: #fde68a !important;
+}
+
+/* Border Overrides */
+html:not(.dark) .border-slate-800,
+html:not(.dark) .border-slate-800\/80,
+html:not(.dark) .border-slate-800\/60,
+html:not(.dark) .border-slate-800\/40,
+html:not(.dark) .border-slate-700,
+html:not(.dark) .border-slate-700\/80,
+html:not(.dark) .border-slate-700\/50,
+html:not(.dark) .border-blue-500\/20,
+html:not(.dark) .border-purple-500\/20 {
+  border-color: #cbd5e1 !important;
+}
+
+/* Crisp & High-Precision Typography Overrides */
+html:not(.dark) .text-white,
+html:not(.dark) .text-slate-100,
+html:not(.dark) .text-slate-200,
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6 {
+  color: #0f172a !important;
+  letter-spacing: -0.01em;
+}
+
+html:not(.dark) .text-slate-300 {
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+html:not(.dark) .text-slate-400 {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+html:not(.dark) .text-slate-500 {
+  color: #475569 !important;
+}
+
+/* High-Contrast Light-Theme Accents */
+html:not(.dark) .text-blue-400 {
+  color: #1d4ed8 !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .text-indigo-400 {
+  color: #4338ca !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .text-purple-400 {
+  color: #6d28d9 !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .text-emerald-400 {
+  color: #047857 !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .text-amber-400 {
+  color: #b45309 !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .text-pink-400 {
+  color: #be185d !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .text-rose-400 {
+  color: #be123c !important;
+  font-weight: 600 !important;
+}
+
+/* Override Pale Dark-Mode Color Classes for Light Mode */
+html:not(.dark) .text-emerald-100,
+html:not(.dark) .text-emerald-200,
+html:not(.dark) .text-emerald-300 {
+  color: #064e3b !important;
+  font-weight: 600 !important;
+}
+
+html:not(.dark) .text-blue-100,
+html:not(.dark) .text-blue-200,
+html:not(.dark) .text-blue-300 {
+  color: #1e3a8a !important;
+  font-weight: 600 !important;
+}
+
+html:not(.dark) .text-purple-100,
+html:not(.dark) .text-purple-200,
+html:not(.dark) .text-purple-300 {
+  color: #581c87 !important;
+  font-weight: 600 !important;
+}
+
+html:not(.dark) .text-indigo-100,
+html:not(.dark) .text-indigo-200,
+html:not(.dark) .text-indigo-300 {
+  color: #3730a3 !important;
+  font-weight: 600 !important;
+}
+
+html:not(.dark) .text-amber-100,
+html:not(.dark) .text-amber-200,
+html:not(.dark) .text-amber-300 {
+  color: #78350f !important;
+  font-weight: 600 !important;
+}
+
+html:not(.dark) .text-rose-100,
+html:not(.dark) .text-rose-200,
+html:not(.dark) .text-rose-300 {
+  color: #881337 !important;
+  font-weight: 600 !important;
+}
+
+/* Badge Fills in Light Mode */
+html:not(.dark) .bg-blue-500\/10,
+html:not(.dark) .bg-blue-600\/15 {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  border-color: #93c5fd !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .bg-emerald-950\/60,
+html:not(.dark) .bg-emerald-500\/10 {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #6ee7b7 !important;
+  font-weight: 600 !important;
+}
+html:not(.dark) .bg-purple-950\/60,
+html:not(.dark) .bg-purple-500\/10 {
+  background-color: #f3e8ff !important;
+  color: #5b21b6 !important;
+  border-color: #d8b4fe !important;
+  font-weight: 600 !important;
+}
+
+/* Filled Action Buttons MUST retain white text! */
+html:not(.dark) .gradient-btn,
+html:not(.dark) button.gradient-btn,
+html:not(.dark) .bg-blue-600,
+html:not(.dark) .bg-indigo-600,
+html:not(.dark) .bg-purple-600,
+html:not(.dark) .bg-emerald-600,
+html:not(.dark) .bg-rose-600,
+html:not(.dark) .gradient-btn *,
+html:not(.dark) button.gradient-btn *,
+html:not(.dark) .bg-blue-600 *,
+html:not(.dark) .bg-indigo-600 *,
+html:not(.dark) .bg-purple-600 *,
+html:not(.dark) .bg-emerald-600 *,
+html:not(.dark) .bg-rose-600 * {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Form Controls & Inputs */
+html:not(.dark) input,
+html:not(.dark) textarea,
+html:not(.dark) select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
+  font-weight: 500 !important;
+}
+
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: #64748b !important;
+}
+
+html:not(.dark) input:focus,
+html:not(.dark) textarea:focus,
+html:not(.dark) select:focus {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15) !important;
+}
+
+/* Sidebar Nav active & hover states */
+html:not(.dark) aside .hover\:bg-slate-900\/60:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Recharts Tooltips in Light Mode */
+html:not(.dark) .recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #cbd5e1;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+
+
+
