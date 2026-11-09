@@ -7,7 +7,7 @@ import {
   Upload, FileText, CheckCircle2, AlertTriangle, ArrowRight,
   ShieldCheck, Award, Check, ChevronDown, ChevronUp,
   RefreshCw, BarChart3, Target, Mic, Code2, Sparkles, Sliders,
-  Terminal, Zap, Flame, Compass, Eye
+  Terminal, Zap, Flame, Compass, Eye, Layout
 } from 'lucide-react';
 
 export default function LandingPage() {
