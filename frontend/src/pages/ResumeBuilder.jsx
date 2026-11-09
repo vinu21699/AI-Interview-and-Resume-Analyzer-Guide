@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import {
-  FileText, Download, Sparkles, Plus, Trash2, Layout, Check, Copy,
-  Globe, Linkedin, Github, Phone, Mail, MapPin, Briefcase, GraduationCap, Code2, Award, Wand2
+  Download, Plus, Briefcase, FileText, Check
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { downloadAtsPdfFromBuilderData } from '../utils/atsPdfGenerator';
 
 export default function ResumeBuilder() {
@@ -24,15 +22,15 @@ export default function ResumeBuilder() {
 
   // Professional Summary
   const [summary, setSummary] = useState(
-    'Results-driven Software Engineer with 4+ years of experience architecting high-throughput REST APIs, leading cross-functional engineering initiatives, and optimizing scalable cloud services using Python, React, Docker, and PostgreSQL.'
+    'Software Engineer with 4+ years of experience architecting high-throughput REST APIs, leading cross-functional engineering initiatives, and optimizing scalable cloud services using Python, React, Docker, and PostgreSQL.'
   );
 
   // Technical Skills Categorized
   const [skills, setSkills] = useState({
-    languages: ['Python', 'JavaScript (ES6+)', 'TypeScript', 'SQL', 'HTML5/CSS3'],
-    frameworks: ['React.js', 'FastAPI', 'Node.js', 'Express', 'Tailwind CSS'],
-    databases: ['PostgreSQL', 'Redis', 'MongoDB', 'SQLite'],
-    tools: ['Docker', 'Kubernetes', 'AWS (S3, EC2)', 'Git', 'GitHub Actions']
+    languages: ['Python', 'JavaScript (ES6+)', 'TypeScript', 'SQL'],
+    frameworks: ['React', 'FastAPI', 'Node.js', 'Tailwind CSS'],
+    databases: ['PostgreSQL', 'Redis', 'MongoDB'],
+    tools: ['Docker', 'Kubernetes', 'AWS', 'Git']
   });
 
   const [newSkillInput, setNewSkillInput] = useState('');
@@ -69,7 +67,7 @@ export default function ResumeBuilder() {
       name: 'AI Resume & ATS Optimization Engine',
       tech: 'Python, FastAPI, React, PostgreSQL, Docker',
       link: 'github.com/alexjohnson/ai-resume-analyzer',
-      desc: 'Developed full-stack SaaS platform automating candidate resume parsing, job matching, and real-time skill analytics.'
+      desc: 'Full-stack platform automating candidate resume parsing, job matching, and real-time skill analytics.'
     }
   ]);
 
@@ -137,10 +135,8 @@ export default function ResumeBuilder() {
     setProjects(projects.filter((_, i) => i !== idx));
   };
 
-  // Direct System Vector PDF Export via jsPDF
   const handleDownloadPDF = () => {
     try {
-      addToast(`Downloading ${name.replace(/\s+/g, '_')}_100%_ATS_Resume.pdf directly to your system...`, 'info');
       downloadAtsPdfFromBuilderData({
         name,
         targetRole,
@@ -156,8 +152,8 @@ export default function ResumeBuilder() {
         projects,
         education,
         certifications
-      }, `${name.replace(/\s+/g, '_')}_100%_ATS_Resume.pdf`);
-      addToast('100% ATS Vector-Text PDF exported successfully!', 'success');
+      }, `${name.replace(/\s+/g, '_')}_ats_resume.pdf`);
+      addToast('ATS PDF exported.', 'success');
     } catch (err) {
       console.error(err);
       addToast('Failed to export PDF: ' + err.message, 'error');
@@ -165,87 +161,89 @@ export default function ResumeBuilder() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 print:p-0 print:max-w-none">
-      {/* Page Header (Hidden during PDF print) */}
-      <div className="space-y-2 print:hidden">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-xs font-semibold text-blue-400">
-          <Sparkles className="w-3.5 h-3.5" /> 100% ATS-Friendly Resume Builder
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6 print:p-0 print:max-w-none">
+      {/* Page Header */}
+      <div className="space-y-1.5 print:hidden">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+          <FileText className="w-3.5 h-3.5" />
+          <span>ATS Document Generator</span>
         </div>
-        <h1 className="text-3xl font-extrabold text-white">Create 100% ATS Resume From Scratch</h1>
-        <p className="text-sm text-slate-400 max-w-2xl">
-          Build a fully parsed ATS resume with complete fields for GitHub, LinkedIn, Portfolio, Contact Number, Projects, and Experience with live A4 preview.
+        <h1 className="text-2xl font-semibold text-white tracking-tight">Structured resume builder</h1>
+        <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+          Author an ATS-compliant resume with structured metadata fields and real-time linear document preview.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 print:block">
-        {/* Editor Form (Hidden during PDF print) */}
-        <div className="glass-card p-6 border border-slate-800 space-y-6 print:hidden max-h-[850px] overflow-y-auto pr-3">
-          <h2 className="text-base font-bold text-white border-b border-slate-800 pb-3 flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-blue-400" /> Resume Information & Content
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 print:block">
+        {/* Editor Form */}
+        <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-5 print:hidden max-h-[850px] overflow-y-auto pr-3">
+          <h2 className="text-xs font-medium text-white uppercase tracking-wider border-b border-white/[0.06] pb-3 flex items-center gap-2">
+            <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+            <span>Document content</span>
           </h2>
 
-          {/* Contact Information Inputs */}
+          {/* Contact Information */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider">1. Contact & Header Information</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider">1. Contact & header</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Full Name</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">Full name</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Target Professional Role</label>
-                <input type="text" value={targetRole} onChange={(e) => setTargetRole(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">Target role</label>
+                <input type="text" value={targetRole} onChange={(e) => setTargetRole(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Email Address</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Contact Phone Number</label>
-                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">Phone</label>
+                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Location (City, State/Country)</label>
-                <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">Location</label>
+                <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-blue-400 mb-1">LinkedIn Profile URL</label>
-                <input type="text" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">LinkedIn</label>
+                <input type="text" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-purple-400 mb-1">GitHub Profile URL</label>
-                <input type="text" value={github} onChange={(e) => setGithub(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">GitHub</label>
+                <input type="text" value={github} onChange={(e) => setGithub(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-emerald-400 mb-1">Portfolio / Website URL</label>
-                <input type="text" value={portfolio} onChange={(e) => setPortfolio(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white" />
+                <label className="block text-[11px] text-slate-500 mb-1">Portfolio</label>
+                <input type="text" value={portfolio} onChange={(e) => setPortfolio(e.target.value)} className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2 text-white text-xs focus:outline-none" />
               </div>
             </div>
           </div>
 
           {/* Professional Summary */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider">2. Professional Summary</h3>
+          <div className="space-y-1.5">
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider">2. Professional summary</h3>
             <textarea
               rows={3}
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white leading-relaxed"
+              className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-2.5 text-xs text-white leading-relaxed focus:outline-none"
             />
           </div>
 
-          {/* Technical Skills Categorized */}
+          {/* Skills */}
           <div className="space-y-2">
-            <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider">3. Technical Skills Matrix</h3>
+            <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider">3. Technical skills</h3>
             <div className="flex items-center gap-2 mb-2 text-xs">
               <select
                 value={activeSkillCategory}
                 onChange={(e) => setActiveSkillCategory(e.target.value)}
-                className="bg-slate-900 border border-slate-800 rounded-xl p-2 text-slate-300 text-xs"
+                className="bg-[#141415] border border-white/[0.08] rounded-lg px-2.5 py-1.5 text-slate-300 text-xs focus:outline-none font-mono"
               >
                 <option value="languages">Languages</option>
-                <option value="frameworks">Frameworks & Libraries</option>
-                <option value="databases">Databases & Cloud</option>
+                <option value="frameworks">Frameworks</option>
+                <option value="databases">Databases</option>
                 <option value="tools">DevOps & Tools</option>
               </select>
 
@@ -253,23 +251,23 @@ export default function ResumeBuilder() {
                 type="text"
                 value={newSkillInput}
                 onChange={(e) => setNewSkillInput(e.target.value)}
-                placeholder="Add skill (e.g. PyTorch)..."
-                className="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white"
+                placeholder="Add skill..."
+                className="flex-1 bg-[#141415] border border-white/[0.08] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none"
               />
-              <button onClick={handleAddSkill} className="gradient-btn px-3 py-2 rounded-xl text-xs font-bold">
-                <Plus className="w-4 h-4" />
+              <button onClick={handleAddSkill} className="px-3 py-1.5 rounded-lg bg-[#232325] hover:bg-[#2c2c30] text-slate-300 border border-white/[0.08] text-xs font-medium transition-colors">
+                <Plus className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-1.5 text-xs">
               {Object.entries(skills).map(([cat, list]) => (
-                <div key={cat} className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">{cat}</span>
-                  <div className="flex flex-wrap gap-1.5">
+                <div key={cat} className="p-2.5 rounded-lg bg-[#141415] border border-white/[0.08]">
+                  <span className="text-[10px] uppercase font-mono text-slate-500 block mb-1">{cat}</span>
+                  <div className="flex flex-wrap gap-1">
                     {list.map((sk) => (
-                      <span key={sk} className="px-2 py-0.5 rounded bg-blue-950/60 border border-blue-500/30 text-[11px] text-blue-300 flex items-center gap-1">
+                      <span key={sk} className="px-2 py-0.5 rounded bg-[#232325] border border-white/[0.08] text-[11px] font-mono text-slate-300 flex items-center gap-1">
                         {sk}
-                        <button onClick={() => handleRemoveSkill(cat, sk)} className="text-slate-500 hover:text-rose-400">×</button>
+                        <button onClick={() => handleRemoveSkill(cat, sk)} className="text-slate-500 hover:text-white">×</button>
                       </span>
                     ))}
                   </div>
@@ -281,51 +279,51 @@ export default function ResumeBuilder() {
           {/* Work Experience */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider">4. Professional Work Experience</h3>
-              <button onClick={handleAddExp} className="text-xs text-blue-400 hover:underline flex items-center gap-1">
-                <Plus className="w-3.5 h-3.5" /> Add Experience
+              <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider">4. Work experience</h3>
+              <button onClick={handleAddExp} className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-mono">
+                <Plus className="w-3 h-3" /> Add role
               </button>
             </div>
 
             {experience.map((exp, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+              <div key={idx} className="p-3 rounded-lg bg-[#141415] border border-white/[0.08] space-y-2 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-white">Experience #{idx + 1}</span>
-                  <button onClick={() => handleRemoveExp(idx)} className="text-rose-400 hover:text-rose-300 text-xs">Remove</button>
+                  <span className="font-medium text-white">Experience #{idx + 1}</span>
+                  <button onClick={() => handleRemoveExp(idx)} className="text-slate-500 hover:text-white text-[11px] font-mono">Remove</button>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="text"
-                    placeholder="Job Title"
+                    placeholder="Role title"
                     value={exp.role}
                     onChange={(e) => {
                       const updated = [...experience];
                       updated[idx].role = e.target.value;
                       setExperience(updated);
                     }}
-                    className="bg-slate-900 border border-slate-800 rounded p-1.5 text-white font-bold"
+                    className="bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-white"
                   />
                   <input
                     type="text"
-                    placeholder="Company Name"
+                    placeholder="Company"
                     value={exp.company}
                     onChange={(e) => {
                       const updated = [...experience];
                       updated[idx].company = e.target.value;
                       setExperience(updated);
                     }}
-                    className="bg-slate-900 border border-slate-800 rounded p-1.5 text-slate-300"
+                    className="bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-slate-300"
                   />
                   <input
                     type="text"
-                    placeholder="Dates (e.g. 2022 - Present)"
+                    placeholder="Dates"
                     value={exp.dates}
                     onChange={(e) => {
                       const updated = [...experience];
                       updated[idx].dates = e.target.value;
                       setExperience(updated);
                     }}
-                    className="bg-slate-900 border border-slate-800 rounded p-1.5 text-slate-400"
+                    className="bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-slate-400"
                   />
                   <input
                     type="text"
@@ -336,96 +334,94 @@ export default function ResumeBuilder() {
                       updated[idx].location = e.target.value;
                       setExperience(updated);
                     }}
-                    className="bg-slate-900 border border-slate-800 rounded p-1.5 text-slate-400"
+                    className="bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-slate-400"
                   />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Portfolio Projects */}
+          {/* Projects */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <h3 className="text-xs font-bold text-blue-400 uppercase tracking-wider">5. Key Portfolio Projects</h3>
-              <button onClick={handleAddProject} className="text-xs text-blue-400 hover:underline flex items-center gap-1">
-                <Plus className="w-3.5 h-3.5" /> Add Project
+              <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider">5. Portfolio projects</h3>
+              <button onClick={handleAddProject} className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-mono">
+                <Plus className="w-3 h-3" /> Add project
               </button>
             </div>
 
             {projects.map((proj, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+              <div key={idx} className="p-3 rounded-lg bg-[#141415] border border-white/[0.08] space-y-2 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-white">Project #{idx + 1}</span>
-                  <button onClick={() => handleRemoveProject(idx)} className="text-rose-400 hover:text-rose-300 text-xs">Remove</button>
+                  <span className="font-medium text-white">Project #{idx + 1}</span>
+                  <button onClick={() => handleRemoveProject(idx)} className="text-slate-500 hover:text-white text-[11px] font-mono">Remove</button>
                 </div>
                 <input
                   type="text"
-                  placeholder="Project Name"
+                  placeholder="Project name"
                   value={proj.name}
                   onChange={(e) => {
                     const updated = [...projects];
                     updated[idx].name = e.target.value;
                     setProjects(updated);
                   }}
-                  className="w-full bg-slate-900 border border-slate-800 rounded p-1.5 text-white font-bold"
+                  className="w-full bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-white"
                 />
                 <input
                   type="text"
-                  placeholder="Tech Stack Used"
+                  placeholder="Tech stack"
                   value={proj.tech}
                   onChange={(e) => {
                     const updated = [...projects];
                     updated[idx].tech = e.target.value;
                     setProjects(updated);
                   }}
-                  className="w-full bg-slate-900 border border-slate-800 rounded p-1.5 text-slate-300"
+                  className="w-full bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-slate-300"
                 />
                 <input
                   type="text"
-                  placeholder="GitHub / Live URL"
+                  placeholder="GitHub / URL"
                   value={proj.link}
                   onChange={(e) => {
                     const updated = [...projects];
                     updated[idx].link = e.target.value;
                     setProjects(updated);
                   }}
-                  className="w-full bg-slate-900 border border-slate-800 rounded p-1.5 text-slate-400"
+                  className="w-full bg-[#19191b] border border-white/[0.08] rounded p-1.5 text-slate-400"
                 />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Live 100% ATS Resume Preview & Actions */}
+        {/* Live Preview */}
         <div className="space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2 print:hidden">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Check className="w-4 h-4 text-emerald-400" /> 100% ATS Format Preview
+            <h2 className="text-xs font-medium text-white uppercase tracking-wider flex items-center gap-2">
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Standard A4 preview</span>
             </h2>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleDownloadPDF}
-                className="gradient-btn px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20"
-              >
-                <Download className="w-4 h-4" /> Download PDF
-              </button>
-            </div>
+            <button
+              onClick={handleDownloadPDF}
+              className="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-graphite-950 text-xs font-medium flex items-center gap-1.5 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download PDF</span>
+            </button>
           </div>
 
-          {/* Standard A4 100% ATS Document Card */}
           <div
             id="ats-builder-resume-document"
             style={{ fontFamily: 'Arial, Calibri, Helvetica, sans-serif' }}
-            className="bg-white text-slate-950 p-10 rounded-2xl shadow-2xl min-h-[750px] border border-slate-300 text-left"
+            className="bg-white text-slate-950 p-8 sm:p-10 rounded-lg min-h-[720px] border border-slate-300 text-left"
           >
-            {/* ATS Header */}
-            <div className="text-center border-b-2 border-slate-900 pb-4 mb-4">
-              <h1 className="text-2xl font-black uppercase text-slate-950 tracking-tight">{name}</h1>
-              <p className="text-xs font-bold text-slate-800 uppercase tracking-wider mt-0.5">{targetRole}</p>
+            {/* Header */}
+            <div className="text-center border-b-2 border-slate-900 pb-3 mb-3">
+              <h1 className="text-xl font-bold uppercase text-slate-950 tracking-tight">{name}</h1>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mt-0.5">{targetRole}</p>
 
-              {/* Complete Contact Details Bar */}
-              <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[11px] text-slate-700 mt-2 font-medium">
+              <div className="flex flex-wrap justify-center items-center gap-x-2.5 gap-y-1 text-[11px] text-slate-700 mt-1.5">
                 {email && <span>Email: {email}</span>}
                 {phone && <span>| Phone: {phone}</span>}
                 {location && <span>| Location: {location}</span>}
@@ -435,42 +431,42 @@ export default function ResumeBuilder() {
               </div>
             </div>
 
-            {/* Professional Summary */}
+            {/* Summary */}
             {summary && (
-              <div className="mb-4">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-1 mb-2">
-                  Professional Summary
+              <div className="mb-3">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-0.5 mb-1.5">
+                  Professional summary
                 </h2>
-                <p className="text-[11.5px] text-slate-800 leading-relaxed">{summary}</p>
+                <p className="text-[11px] text-slate-800 leading-relaxed">{summary}</p>
               </div>
             )}
 
             {/* Technical Skills */}
-            <div className="mb-4">
-              <h2 className="text-xs font-black uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-1 mb-2">
-                Technical Skills
+            <div className="mb-3">
+              <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-0.5 mb-1.5">
+                Technical skills
               </h2>
-              <div className="space-y-1 text-[11.5px] text-slate-800">
-                {skills.languages.length > 0 && <div><strong>Programming Languages:</strong> {skills.languages.join(', ')}</div>}
-                {skills.frameworks.length > 0 && <div><strong>Frameworks & Libraries:</strong> {skills.frameworks.join(', ')}</div>}
-                {skills.databases.length > 0 && <div><strong>Databases & Cloud:</strong> {skills.databases.join(', ')}</div>}
-                {skills.tools.length > 0 && <div><strong>DevOps & Tools:</strong> {skills.tools.join(', ')}</div>}
+              <div className="space-y-0.5 text-[11px] text-slate-800">
+                {skills.languages.length > 0 && <div><strong>Languages:</strong> {skills.languages.join(', ')}</div>}
+                {skills.frameworks.length > 0 && <div><strong>Frameworks:</strong> {skills.frameworks.join(', ')}</div>}
+                {skills.databases.length > 0 && <div><strong>Databases:</strong> {skills.databases.join(', ')}</div>}
+                {skills.tools.length > 0 && <div><strong>Tools:</strong> {skills.tools.join(', ')}</div>}
               </div>
             </div>
 
-            {/* Professional Experience */}
+            {/* Experience */}
             {experience.length > 0 && (
-              <div className="mb-4">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-1 mb-2">
-                  Professional Experience
+              <div className="mb-3">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-0.5 mb-1.5">
+                  Professional experience
                 </h2>
                 {experience.map((exp, idx) => (
-                  <div key={idx} className="mb-3 text-[11.5px]">
-                    <div className="flex justify-between items-baseline font-bold text-slate-950">
+                  <div key={idx} className="mb-2 text-[11px]">
+                    <div className="flex justify-between items-baseline font-semibold text-slate-950">
                       <span>{exp.role} | {exp.company}</span>
-                      <span className="text-slate-700 text-[11px] font-normal">{exp.dates} | {exp.location}</span>
+                      <span className="text-slate-700 text-[10.5px] font-normal">{exp.dates} | {exp.location}</span>
                     </div>
-                    <ul className="list-disc list-inside mt-1 space-y-1 text-slate-800 leading-relaxed">
+                    <ul className="list-disc list-inside mt-0.5 space-y-0.5 text-slate-800 leading-relaxed">
                       {exp.bullets.map((b, bIdx) => (
                         <li key={bIdx}>{b}</li>
                       ))}
@@ -480,19 +476,19 @@ export default function ResumeBuilder() {
               </div>
             )}
 
-            {/* Portfolio Projects */}
+            {/* Projects */}
             {projects.length > 0 && (
-              <div className="mb-4">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-1 mb-2">
-                  Key Portfolio Projects
+              <div className="mb-3">
+                <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-0.5 mb-1.5">
+                  Projects
                 </h2>
                 {projects.map((p, idx) => (
-                  <div key={idx} className="mb-2 text-[11.5px]">
-                    <div className="flex justify-between items-baseline font-bold text-slate-950">
+                  <div key={idx} className="mb-1.5 text-[11px]">
+                    <div className="flex justify-between items-baseline font-semibold text-slate-950">
                       <span>{p.name}</span>
-                      <span className="text-slate-700 text-[10.5px] font-normal">{p.link}</span>
+                      <span className="text-slate-700 text-[10px] font-normal">{p.link}</span>
                     </div>
-                    <div className="text-slate-700 text-[11px]"><em>Tech Stack:</em> {p.tech}</div>
+                    <div className="text-slate-700 text-[10.5px]"><em>Stack:</em> {p.tech}</div>
                     <p className="text-slate-800 mt-0.5">{p.desc}</p>
                   </div>
                 ))}
@@ -501,17 +497,17 @@ export default function ResumeBuilder() {
 
             {/* Education & Certifications */}
             <div>
-              <h2 className="text-xs font-black uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-1 mb-2">
-                Education & Certifications
+              <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-950 border-b border-slate-900 pb-0.5 mb-1.5">
+                Education & certifications
               </h2>
               {education.map((edu, idx) => (
-                <div key={idx} className="text-[11.5px] flex justify-between text-slate-900 mb-1">
+                <div key={idx} className="text-[11px] flex justify-between text-slate-900 mb-0.5">
                   <span><strong>{edu.degree}</strong> — {edu.school}</span>
                   <span className="text-slate-700">{edu.year}</span>
                 </div>
               ))}
               {certifications.map((c, idx) => (
-                <div key={idx} className="text-[11px] text-slate-800">• {c}</div>
+                <div key={idx} className="text-[10.5px] text-slate-800">• {c}</div>
               ))}
             </div>
           </div>
@@ -520,4 +516,3 @@ export default function ResumeBuilder() {
     </div>
   );
 }
-

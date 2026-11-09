@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNotification } from '../context/NotificationContext';
 import api from '../services/api';
 import {
-  Building2, Briefcase, Calendar, Sparkles, CheckCircle2,
-  BookOpen, Code2, Database, HelpCircle, Layers, ArrowRight,
-  Clock, ShieldAlert, Award, FileText, Check
+  Building2, Briefcase, Calendar,
+  Code2, Database, HelpCircle, Layers,
+  Clock, FileText, CheckCircle2
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export default function CompanyPrep() {
   const [popularCompanies, setPopularCompanies] = useState([]);
@@ -45,7 +44,7 @@ export default function CompanyPrep() {
         timeline_days: timelineDays
       });
       setPrepPlan(res.data);
-      addToast(`Personalized ${finalCompany} preparation plan generated!`, 'success');
+      addToast(`Personalized ${finalCompany} preparation plan generated.`, 'success');
     } catch (err) {
       addToast('Failed to generate target company preparation plan.', 'error');
     } finally {
@@ -54,63 +53,60 @@ export default function CompanyPrep() {
   };
 
   return (
-    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8 font-sans">
+    <div className="p-6 sm:p-8 max-w-6xl mx-auto space-y-6 font-sans">
       
-      {/* Top Banner */}
-      <div className="glass-card p-6 sm:p-8 bg-gradient-to-r from-blue-950/40 via-slate-900 to-slate-950 border border-blue-500/20 rounded-3xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
-        <div className="space-y-2 z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-xs font-bold text-blue-400">
-            <Building2 className="w-3.5 h-3.5" /> Target Company Preparation
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-            Target Company <span className="text-blue-400">Readiness Blueprint</span>
-          </h1>
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Configure your target company, role, and timeline to receive personalized interview questions, priority DSA & SQL topics, project viva prompts, and a day-by-day practice roadmap.
-          </p>
+      {/* Header Context Bar */}
+      <div className="border-b border-white/[0.08] pb-5 space-y-1">
+        <div className="flex items-center gap-2 text-xs font-mono text-[#85858b]">
+          <Building2 className="w-3.5 h-3.5 text-blue-400" />
+          <span>Company alignment</span>
         </div>
+        <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-[#ededed]">
+          Target company preparation
+        </h1>
+        <p className="text-xs text-[#a1a1a6] max-w-xl leading-relaxed">
+          Configure your target company, role, and timeline to receive personalized interview questions, priority DSA & SQL topics, and a structured milestone schedule.
+        </p>
       </div>
 
       {/* Configuration Form Card */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl backdrop-blur-xl">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           
-          {/* Company Picker */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-2">
-              <Building2 className="w-3.5 h-3.5 text-blue-400" /> Target Company
+          <div className="space-y-1.5">
+            <label className="text-xs text-[#85858b] font-mono flex items-center gap-1.5">
+              <Building2 className="w-3.5 h-3.5" /> Target company
             </label>
             <select
               value={targetCompany}
               onChange={e => setTargetCompany(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl p-3 text-xs text-white"
+              className="w-full bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-2.5 text-xs text-[#ededed] focus:outline-none"
             >
               {popularCompanies.map((c, idx) => (
                 <option key={idx} value={c.name}>{c.name} ({c.category})</option>
               ))}
-              <option value="Other">Other / Custom Company</option>
+              <option value="Other">Other / Custom</option>
             </select>
 
             {targetCompany === 'Other' && (
               <input
                 type="text"
-                placeholder="Enter custom company name..."
+                placeholder="Enter company name..."
                 value={customCompany}
                 onChange={e => setCustomCompany(e.target.value)}
-                className="w-full mt-2 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl p-3 text-xs text-white"
+                className="w-full mt-2 bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-2.5 text-xs text-[#ededed] focus:outline-none"
               />
             )}
           </div>
 
-          {/* Role Picker */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-2">
-              <Briefcase className="w-3.5 h-3.5 text-blue-400" /> Target Job Role
+          <div className="space-y-1.5">
+            <label className="text-xs text-[#85858b] font-mono flex items-center gap-1.5">
+              <Briefcase className="w-3.5 h-3.5" /> Target role
             </label>
             <select
               value={targetRole}
               onChange={e => setTargetRole(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl p-3 text-xs text-white"
+              className="w-full bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-2.5 text-xs text-[#ededed] focus:outline-none"
             >
               {popularRoles.map((r, idx) => (
                 <option key={idx} value={r}>{r}</option>
@@ -118,20 +114,19 @@ export default function CompanyPrep() {
             </select>
           </div>
 
-          {/* Timeline Picker */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-2">
-              <Calendar className="w-3.5 h-3.5 text-blue-400" /> Preparation Timeline
+          <div className="space-y-1.5">
+            <label className="text-xs text-[#85858b] font-mono flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5" /> Timeline
             </label>
             <select
               value={timelineDays}
               onChange={e => setTimelineDays(Number(e.target.value))}
-              className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl p-3 text-xs text-white"
+              className="w-full bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-2.5 text-xs text-[#ededed] focus:outline-none"
             >
-              <option value={7}>7 Days (Rapid Sprint)</option>
-              <option value={15}>15 Days (Accelerated Preparation)</option>
-              <option value={30}>30 Days (Standard Recommended)</option>
-              <option value={60}>60 Days (Comprehensive Mastery)</option>
+              <option value={7}>7 days (Sprint)</option>
+              <option value={15}>15 days (Accelerated)</option>
+              <option value={30}>30 days (Standard)</option>
+              <option value={60}>60 days (Comprehensive)</option>
             </select>
           </div>
         </div>
@@ -140,91 +135,75 @@ export default function CompanyPrep() {
           <button
             onClick={handleGeneratePlan}
             disabled={generating}
-            className="gradient-btn px-8 py-3 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg"
+            className="btn-primary text-xs"
           >
-            {generating ? (
-              <>
-                <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-                Synthesizing Blueprint...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" /> Generate Company Preparation Plan
-              </>
-            )}
+            {generating ? 'Synthesizing...' : 'Generate preparation plan'}
           </button>
         </div>
       </div>
 
       {/* Generated Blueprint View */}
       {prepPlan && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+        <div className="space-y-6">
           
-          {/* Header Card */}
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-2 relative">
-            <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="p-5 rounded-xl bg-[#19191b] border border-white/[0.08] space-y-1.5">
+            <div className="flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-xs font-bold text-blue-400">
-                  {prepPlan.company} Preparation
-                </span>
-                <span className="text-xs text-slate-400">• {prepPlan.role}</span>
+                <span className="text-[#ededed] font-medium">{prepPlan.company} preparation</span>
+                <span className="text-[#85858b]">• {prepPlan.role}</span>
               </div>
-              <span className="text-xs text-slate-400 font-mono bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
-                {prepPlan.timeline_days} Days Horizon
+              <span className="text-[#85858b]">
+                {prepPlan.timeline_days} days horizon
               </span>
             </div>
 
-            <h3 className="text-lg font-bold text-white pt-1">
-              Hiring Profile: <span className="text-blue-400">{prepPlan.company_archetype}</span>
+            <h3 className="text-sm font-medium text-[#ededed]">
+              Hiring profile: <span className="text-blue-400">{prepPlan.company_archetype}</span>
             </h3>
             
-            <p className="text-[11px] text-slate-400 italic">
+            <p className="text-[11px] text-[#85858b] font-mono">
               {prepPlan.ai_disclaimer}
             </p>
           </div>
 
-          {/* Pillars Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             
-            {/* Priority DSA */}
-            <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
-                <Code2 className="w-4 h-4" /> Priority DSA Topics
+            <div className="bg-[#19191b] border border-white/[0.08] p-4 rounded-xl space-y-2">
+              <h4 className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
+                <Code2 className="w-3.5 h-3.5" /> Priority DSA topics
               </h4>
-              <ul className="space-y-2 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-[#a1a1a6]">
                 {prepPlan.focus_dsa?.map((t, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-emerald-400">•</span>
                     <span>{t}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* SQL & Database */}
-            <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2">
-                <Database className="w-4 h-4" /> Core SQL & Database Focus
+            <div className="bg-[#19191b] border border-white/[0.08] p-4 rounded-xl space-y-2">
+              <h4 className="text-xs font-mono text-blue-400 flex items-center gap-1.5">
+                <Database className="w-3.5 h-3.5" /> Core SQL & database
               </h4>
-              <ul className="space-y-2 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-[#a1a1a6]">
                 {prepPlan.focus_sql?.map((t, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-blue-400">•</span>
                     <span>{t}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Core Tech */}
-            <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
-                <Layers className="w-4 h-4" /> Engineering Concepts
+            <div className="bg-[#19191b] border border-white/[0.08] p-4 rounded-xl space-y-2">
+              <h4 className="text-xs font-mono text-purple-400 flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5" /> Engineering concepts
               </h4>
-              <ul className="space-y-2 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-[#a1a1a6]">
                 {prepPlan.technical_topics?.map((t, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1.5 shrink-0" />
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-purple-400">•</span>
                     <span>{t}</span>
                   </li>
                 ))}
@@ -232,45 +211,43 @@ export default function CompanyPrep() {
             </div>
           </div>
 
-          {/* High-Frequency Interview Questions */}
-          <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-4">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-amber-400" /> High-Yield Interview Questions for {prepPlan.company}
+          <div className="bg-[#19191b] border border-white/[0.08] p-5 rounded-xl space-y-3">
+            <h4 className="text-xs font-medium text-[#ededed] flex items-center gap-1.5">
+              <HelpCircle className="w-3.5 h-3.5 text-amber-400" /> High-yield interview questions for {prepPlan.company}
             </h4>
-            <div className="space-y-2">
+            <div className="space-y-1.5 font-mono text-xs">
               {prepPlan.interview_questions?.map((q, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 flex items-start gap-3">
-                  <span className="font-mono text-amber-400 font-bold">Q{idx + 1}</span>
-                  <p className="leading-relaxed">{q}</p>
+                <div key={idx} className="p-3 rounded-lg bg-[#232325] border border-white/[0.08] text-[#a1a1a6] flex items-start gap-2.5">
+                  <span className="text-amber-400 font-bold shrink-0">Q{idx + 1}</span>
+                  <p className="leading-relaxed font-sans">{q}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Project Viva Prompts & Resume Tips */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-3">
-              <h4 className="text-xs font-bold uppercase text-purple-400 flex items-center gap-2">
-                <FileText className="w-4 h-4" /> Project Viva Defense Prompts
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="bg-[#19191b] border border-white/[0.08] p-4 rounded-xl space-y-2">
+              <h4 className="text-xs font-mono text-purple-400 flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5" /> Project viva prompts
               </h4>
-              <ul className="space-y-2 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-[#a1a1a6]">
                 {prepPlan.project_viva_prompts?.map((p, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1.5 shrink-0" />
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-purple-400">•</span>
                     <span>{p}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-3">
-              <h4 className="text-xs font-bold uppercase text-emerald-400 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4" /> Resume Tailoring Recommendations
+            <div className="bg-[#19191b] border border-white/[0.08] p-4 rounded-xl space-y-2">
+              <h4 className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Resume tailoring tips
               </h4>
-              <ul className="space-y-2 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-[#a1a1a6]">
                 {prepPlan.resume_tailoring_tips?.map((tip, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-emerald-400">•</span>
                     <span>{tip}</span>
                   </li>
                 ))}
@@ -278,25 +255,22 @@ export default function CompanyPrep() {
             </div>
           </div>
 
-          {/* Structured Multi-Week Calendar */}
-          <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-4">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
-              <Clock className="w-4 h-4 text-blue-400" /> Structured Timeline & Weekly Milestones
+          <div className="bg-[#19191b] border border-white/[0.08] p-5 rounded-xl space-y-3">
+            <h4 className="text-xs font-medium text-[#ededed] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-blue-400" /> Weekly milestones schedule
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
               {prepPlan.weekly_schedule?.map((w, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-[11px] font-bold text-blue-400">
-                    <span>WEEK {w.week_number}</span>
-                  </div>
-                  <h5 className="text-xs font-bold text-white">{w.focus_theme}</h5>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">{w.milestone_goal}</p>
+                <div key={idx} className="p-3.5 rounded-lg bg-[#232325] border border-white/[0.08] space-y-1">
+                  <span className="text-[10px] font-mono text-blue-400">Week {w.week_number}</span>
+                  <h5 className="text-xs font-medium text-[#ededed]">{w.focus_theme}</h5>
+                  <p className="text-[11px] text-[#85858b] leading-relaxed">{w.milestone_goal}</p>
                 </div>
               ))}
             </div>
           </div>
 
-        </motion.div>
+        </div>
       )}
 
     </div>

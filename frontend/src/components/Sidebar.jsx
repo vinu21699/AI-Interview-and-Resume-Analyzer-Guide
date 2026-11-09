@@ -3,6 +3,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
+  ShieldCheck,
+  ShieldAlert,
+  Building2,
   FileCheck,
   Briefcase,
   Mic,
@@ -11,37 +14,33 @@ import {
   Bot,
   FileText,
   BarChart3,
-  ShieldCheck,
-  ShieldAlert,
-  Building2,
   User,
-  Sparkles,
   Users,
-  Database,
-  Activity
+  Activity,
+  Database
 } from 'lucide-react';
 
 const candidateNavItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/resume-claim-verification', label: 'Claim Verification', icon: ShieldCheck },
-  { path: '/project-defense', label: 'Project Defense', icon: ShieldAlert },
-  { path: '/company-prep', label: 'Company Prep', icon: Building2 },
-  { path: '/resume-analyzer', label: 'Resume Analyzer', icon: FileCheck },
-  { path: '/job-match', label: 'Job Matching', icon: Briefcase },
-  { path: '/mock-interview', label: 'AI Mock Interview', icon: Mic },
-  { path: '/coding-interview', label: 'Coding Interview', icon: Code2 },
-  { path: '/career-roadmap', label: 'Career Roadmap', icon: Map },
-  { path: '/learning-assistant', label: 'AI Assistant', icon: Bot },
-  { path: '/resume-builder', label: 'Resume Builder', icon: FileText },
+  { path: '/resume-claim-verification', label: 'Claim verification', icon: ShieldCheck },
+  { path: '/project-defense', label: 'Project defense', icon: ShieldAlert },
+  { path: '/company-prep', label: 'Company prep', icon: Building2 },
+  { path: '/resume-analyzer', label: 'Resume analyzer', icon: FileCheck },
+  { path: '/job-match', label: 'Job match', icon: Briefcase },
+  { path: '/mock-interview', label: 'Mock interview', icon: Mic },
+  { path: '/coding-interview', label: 'Coding sandbox', icon: Code2 },
+  { path: '/career-roadmap', label: 'Career roadmap', icon: Map },
+  { path: '/learning-assistant', label: 'AI assistant', icon: Bot },
+  { path: '/resume-builder', label: 'Resume builder', icon: FileText },
   { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   { path: '/profile', label: 'Profile', icon: User },
 ];
 
 const adminNavItems = [
-  { path: '/admin?tab=overview', tab: 'overview', label: 'Admin Control Center', icon: ShieldCheck },
-  { path: '/admin?tab=users', tab: 'users', label: 'User Directory & Roles', icon: Users },
-  { path: '/admin?tab=analytics', tab: 'analytics', label: 'System Analytics', icon: Activity },
-  { path: '/admin?tab=logs', tab: 'logs', label: 'Database Audit Logs', icon: Database },
+  { path: '/admin?tab=overview', tab: 'overview', label: 'Admin control center', icon: ShieldCheck },
+  { path: '/admin?tab=users', tab: 'users', label: 'User directory', icon: Users },
+  { path: '/admin?tab=analytics', tab: 'analytics', label: 'System analytics', icon: Activity },
+  { path: '/admin?tab=logs', tab: 'logs', label: 'Audit logs', icon: Database },
 ];
 
 export default function Sidebar() {
@@ -53,14 +52,13 @@ export default function Sidebar() {
 
   if (isAdmin) {
     return (
-      <aside className="w-64 bg-slate-950/80 backdrop-blur-xl border-r border-rose-900/30 p-4 flex flex-col justify-between shrink-0 hidden md:flex min-h-[calc(100vh-61px)]">
+      <aside className="w-60 bg-[#0f0f10] border-r border-white/[0.08] p-3 flex flex-col justify-between shrink-0 hidden md:flex min-h-[calc(100vh-56px)] select-none">
         <div className="space-y-4">
           <div>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-bold text-xs mb-4">
-              <ShieldCheck className="w-4 h-4 shrink-0" /> Administrator Portal
+            <div className="px-2.5 py-1.5 text-[11px] font-mono text-[#85858b] tracking-wider uppercase mb-1">
+              System governance
             </div>
-            <p className="text-[11px] font-bold tracking-wider text-rose-400/80 uppercase px-3 mb-2">System Controls</p>
-            <div className="space-y-1">
+            <nav className="space-y-1">
               {adminNavItems.map((item) => {
                 const Icon = item.icon;
                 const isTabActive = activeTab === item.tab;
@@ -68,38 +66,40 @@ export default function Sidebar() {
                   <NavLink
                     key={item.tab}
                     to={item.path}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                    className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium h-9 transition-colors ${
                       isTabActive
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-lg shadow-rose-500/10'
-                        : 'text-slate-400 hover:text-rose-300 hover:bg-rose-950/30'
+                        ? 'bg-[#232325] text-[#ededed] border border-white/[0.08]'
+                        : 'text-[#a1a1a6] hover:text-[#ededed] hover:bg-[#19191b]'
                     }`}
                   >
-                    <Icon className="w-4 h-4 shrink-0 text-rose-400" />
+                    <Icon className="w-4 h-4 shrink-0 text-[#85858b]" />
                     <span>{item.label}</span>
                   </NavLink>
                 );
               })}
-            </div>
+            </nav>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900/60 to-purple-950/40 border border-rose-500/20 text-center space-y-2 mt-4">
-          <div className="w-8 h-8 rounded-full bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center">
-            <ShieldCheck className="w-4 h-4" />
+        <div className="p-3 rounded-lg bg-[#19191b] border border-white/[0.08] text-[11px] text-[#85858b] font-mono">
+          <div className="flex items-center gap-2 text-[#ededed] font-medium mb-0.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Admin session
           </div>
-          <h4 className="text-xs font-semibold text-rose-200">Admin Mode Active</h4>
-          <p className="text-[11px] text-slate-400">Full system governance & database management.</p>
+          Full system authority
         </div>
       </aside>
     );
   }
 
   return (
-    <aside className="w-64 bg-slate-950/60 backdrop-blur-xl border-r border-slate-800/60 p-4 flex flex-col justify-between shrink-0 hidden md:flex min-h-[calc(100vh-61px)]">
+    <aside className="w-60 bg-[#0f0f10] border-r border-white/[0.08] p-3 flex flex-col justify-between shrink-0 hidden md:flex min-h-[calc(100vh-56px)] select-none">
       <div className="space-y-4">
         <div>
-          <p className="text-[11px] font-bold tracking-wider text-slate-500 uppercase px-3 mb-2">Candidate Workspace</p>
-          <div className="space-y-1">
+          <div className="px-2.5 py-1 text-[11px] font-mono text-[#85858b] tracking-wider uppercase mb-1">
+            Workspace
+          </div>
+          <nav className="space-y-0.5">
             {candidateNavItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -107,31 +107,29 @@ export default function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    `flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium h-9 transition-colors ${
                       isActive
-                        ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-md shadow-blue-500/5'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+                        ? 'bg-[#232325] text-[#ededed] border border-white/[0.08]'
+                        : 'text-[#a1a1a6] hover:text-[#ededed] hover:bg-[#19191b]'
                     }`
                   }
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
+                  <Icon className="w-4 h-4 shrink-0 text-[#85858b]" />
                   <span>{item.label}</span>
                 </NavLink>
               );
             })}
-          </div>
+          </nav>
         </div>
       </div>
 
-      <div className="p-3.5 rounded-2xl bg-gradient-to-br from-blue-950/40 via-indigo-950/30 to-purple-950/40 border border-blue-500/20 text-center space-y-2 mt-4">
-        <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 mx-auto flex items-center justify-center">
-          <Sparkles className="w-4 h-4" />
+      <div className="p-2.5 rounded-lg bg-[#19191b] border border-white/[0.08] text-[11px] text-[#85858b]">
+        <div className="flex items-center gap-2 text-[#ededed] font-medium mb-0.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Placement ready
         </div>
-        <h4 className="text-xs font-semibold text-slate-200">Gemini AI Active</h4>
-        <p className="text-[11px] text-slate-400">Powered by Google GenAI models for career analysis.</p>
+        Target: {user?.preferred_job_role || 'Software Engineer'}
       </div>
     </aside>
   );
 }
-
-

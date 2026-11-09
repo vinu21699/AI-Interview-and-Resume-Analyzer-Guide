@@ -3,10 +3,9 @@ import { useNotification } from '../context/NotificationContext';
 import api from '../services/api';
 import { speakText, createSpeechRecognition } from '../services/speechService';
 import {
-  Mic, Volume2, VolumeX, Send, CheckCircle2, Play, RefreshCw,
-  Sparkles, Award, BarChart3, RotateCcw
+  Mic, Volume2, Send, Play, RefreshCw,
+  Award, BarChart3, RotateCcw
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export default function MockInterview() {
   const [role, setRole] = useState('Software Engineer');
@@ -33,9 +32,9 @@ export default function MockInterview() {
       setCurrentQuestion(res.data.current_question);
       setQuestionNum(1);
       speakText(res.data.current_question);
-      addToast('Mock interview initialized. Listen to the AI question!', 'info');
+      addToast('Interview session initialized.', 'info');
     } catch (err) {
-      addToast('Failed to start interview session', 'error');
+      addToast('Failed to start interview session.', 'error');
     } finally {
       setLoading(false);
     }
@@ -51,7 +50,7 @@ export default function MockInterview() {
       (transcript) => {
         setUserAnswer((prev) => (prev ? prev + ' ' + transcript : transcript));
         setIsRecording(false);
-        addToast('Voice transcribed successfully!', 'success');
+        addToast('Voice transcribed.', 'success');
       },
       (err) => {
         setIsRecording(false);
@@ -63,14 +62,14 @@ export default function MockInterview() {
       setIsRecording(true);
       recognition.start();
     } else {
-      addToast('Speech Recognition not supported in this browser.', 'error');
+      addToast('Speech recognition is not supported in this browser.', 'error');
     }
   };
 
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
     if (!userAnswer.trim()) {
-      addToast('Please provide an answer first.', 'error');
+      addToast('Please enter or record an answer.', 'error');
       return;
     }
 
@@ -87,45 +86,53 @@ export default function MockInterview() {
       setUserAnswer('');
 
       if (res.data.is_finished) {
-        // Finish interview session
         const reportRes = await api.post(`/interview/finish/${session.session_id}`);
         setFinalReport(reportRes.data);
-        addToast('Interview finished! Overall report generated.', 'success');
+        addToast('Interview completed. Overall evaluation generated.', 'success');
       } else {
         setCurrentQuestion(res.data.next_question);
         setQuestionNum((prev) => prev + 1);
         speakText(res.data.next_question);
-        addToast('Evaluation saved. Proceeding to next question.', 'success');
+        addToast('Evaluation saved. Next question loaded.', 'info');
       }
     } catch (err) {
-      addToast('Failed to submit answer', 'error');
+      addToast('Failed to submit answer.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
-      <div className="space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs font-semibold text-purple-400">
-          <Sparkles className="w-3.5 h-3.5" /> AI Audio & Voice Simulator
+    <div className="p-6 sm:p-8 max-w-6xl mx-auto space-y-6 font-sans">
+      
+      {/* Header Context Bar */}
+      <div className="border-b border-white/[0.08] pb-5 space-y-1">
+        <div className="flex items-center gap-2 text-xs font-mono text-[#85858b]">
+          <Mic className="w-3.5 h-3.5 text-rose-400" />
+          <span>Interview simulation</span>
         </div>
-        <h1 className="text-3xl font-extrabold text-white">AI Interactive Mock Interview</h1>
-        <p className="text-sm text-slate-400 max-w-2xl">
-          Simulate realistic technical and behavioral interviews with real-time Text-to-Speech audio questions, speech recognition, and instant AI answer evaluation.
+        <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-[#ededed]">
+          Technical mock interview
+        </h1>
+        <p className="text-xs text-[#a1a1a6] max-w-xl leading-relaxed">
+          Simulate engineering interviews with Text-to-Speech audio questions, speech transcription, and real-time per-answer evaluations.
         </p>
       </div>
 
       {!session ? (
-        <div className="glass-card p-8 border border-slate-800 max-w-2xl mx-auto space-y-6">
-          <h2 className="text-xl font-bold text-white text-center">Configure Mock Session</h2>
+        <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-6 max-w-2xl mx-auto space-y-5">
+          <div className="border-b border-white/[0.08] pb-3">
+            <h2 className="text-sm font-medium text-[#ededed]">Session parameters</h2>
+            <p className="text-xs text-[#85858b]">Configure your interview target and evaluation strictness</p>
+          </div>
+
           <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Target Role</label>
+            <div className="space-y-1.5">
+              <label className="text-xs text-[#85858b] font-mono block">Target role</label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500"
+                className="w-full bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-2.5 text-xs text-[#ededed] focus:outline-none"
               >
                 <option value="Software Engineer">Software Engineer</option>
                 <option value="Java Developer">Java Developer</option>
@@ -137,83 +144,78 @@ export default function MockInterview() {
                 <option value="Data Scientist">Data Scientist</option>
                 <option value="AI Engineer">AI Engineer</option>
                 <option value="DevOps Engineer">DevOps Engineer</option>
-                <option value="Cyber Security">Cyber Security</option>
-                <option value="UI/UX">UI/UX Designer</option>
-                <option value="HR">HR Specialist</option>
               </select>
             </div>
 
-            <div className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-300 uppercase">Select Interview Mode</label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="space-y-2">
+              <label className="text-xs text-[#85858b] font-mono block">Evaluation mode</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <div
                   onClick={() => setMode('Normal')}
-                  className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                     mode === 'Normal'
-                      ? 'bg-blue-950/40 border-blue-500 text-white shadow-lg shadow-blue-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-[#232325] border-white/[0.2]'
+                      : 'bg-[#232325]/50 border-white/[0.08] hover:border-white/[0.16]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold">Normal Mode</span>
-                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span className="text-xs font-medium text-[#ededed]">Normal</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-snug">Friendly, encouraging technical interviewer.</p>
+                  <p className="text-[11px] text-[#85858b] leading-relaxed">Supportive technical interviewer.</p>
                 </div>
 
                 <div
                   onClick={() => setMode('Technical')}
-                  className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                     mode === 'Technical'
-                      ? 'bg-purple-950/40 border-purple-500 text-white shadow-lg shadow-purple-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-[#232325] border-white/[0.2]'
+                      : 'bg-[#232325]/50 border-white/[0.08] hover:border-white/[0.16]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold">Technical Mode</span>
-                    <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+                    <span className="text-xs font-medium text-[#ededed]">Technical</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-snug">Deep architectural and domain-specific questions.</p>
+                  <p className="text-[11px] text-[#85858b] leading-relaxed">Deep architecture and domain focus.</p>
                 </div>
 
                 <div
                   onClick={() => setMode('Pressure')}
-                  className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                     mode === 'Pressure'
-                      ? 'bg-rose-950/40 border-rose-500 text-white shadow-lg shadow-rose-500/10'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-[#232325] border-rose-500/40'
+                      : 'bg-[#232325]/50 border-white/[0.08] hover:border-white/[0.16]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-rose-300">Pressure Mode</span>
-                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                    <span className="text-xs font-medium text-rose-300">Pressure</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-snug">Strict bar-raiser challenging weak answers & asking "Why?".</p>
+                  <p className="text-[11px] text-[#85858b] leading-relaxed">Strict bar-raiser challenging weak answers.</p>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Role Seniority</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs text-[#85858b] font-mono block">Seniority</label>
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500"
+                  className="w-full bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-2.5 text-xs text-[#ededed] focus:outline-none"
                 >
-                  <option value="Junior">Junior Engineer</option>
-                  <option value="Medium">Mid-Level (Standard)</option>
-                  <option value="Senior">Senior / Tech Lead</option>
+                  <option value="Junior">Junior engineer</option>
+                  <option value="Medium">Mid-level (Standard)</option>
+                  <option value="Senior">Senior / Tech lead</option>
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Simulation Type</label>
-                <div className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300 flex items-center justify-between">
-                  <span>{mode === 'Pressure' ? '5 Challenge Questions' : '3 Standard Questions'}</span>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${mode === 'Pressure' ? 'bg-rose-500/20 text-rose-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                    {mode}
-                  </span>
+              <div className="space-y-1.5">
+                <label className="text-xs text-[#85858b] font-mono block">Format</label>
+                <div className="w-full bg-[#232325] border border-white/[0.08] rounded-lg p-2.5 text-xs text-[#a1a1a6] flex items-center justify-between">
+                  <span>{mode === 'Pressure' ? '5 questions' : '3 questions'}</span>
+                  <span className="font-mono text-[#85858b]">{mode}</span>
                 </div>
               </div>
             </div>
@@ -221,60 +223,53 @@ export default function MockInterview() {
             <button
               onClick={handleStartInterview}
               disabled={loading}
-              className="w-full gradient-btn py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 mt-4"
+              className="w-full btn-primary py-2.5 flex items-center justify-center gap-2 mt-2"
             >
-              {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
-              Start AI Mock Interview
+              {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+              Begin mock interview
             </button>
           </div>
         </div>
       ) : !finalReport ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Interview Q&A Box */}
-          <div className="glass-card p-6 border border-slate-800 lg:col-span-2 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <span className={`text-xs font-bold uppercase tracking-wider ${mode === 'Pressure' ? 'text-rose-400' : 'text-purple-400'}`}>
-                Question {questionNum} of {mode === 'Pressure' ? 5 : 3} • {role} ({mode} Mode)
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 lg:col-span-2 space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 text-xs font-mono">
+              <span className={mode === 'Pressure' ? 'text-rose-400' : 'text-[#85858b]'}>
+                Question {questionNum} of {mode === 'Pressure' ? 5 : 3} • {role} ({mode})
               </span>
               <button
                 onClick={() => speakText(currentQuestion)}
-                className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5"
+                className="btn-secondary text-[11px] py-1 flex items-center gap-1.5"
               >
-                <Volume2 className="w-4 h-4 text-purple-400" /> Read Out Loud
+                <Volume2 className="w-3.5 h-3.5" /> Read aloud
               </button>
             </div>
 
             {mode === 'Pressure' && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between text-xs text-rose-300 font-semibold">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-                  HIGH-PRESSURE BAR RAISER: Answer with concrete programming examples and justify your decisions.
-                </span>
+              <div className="p-2.5 rounded-lg bg-[#232325] border border-rose-500/30 text-xs text-rose-300 font-mono flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                <span>Bar-raiser mode: Justify architectural decisions with concrete code examples.</span>
               </div>
             )}
 
-            <div className={`p-6 rounded-2xl border space-y-2 ${mode === 'Pressure' ? 'bg-slate-950 border-rose-500/30' : 'bg-slate-950 border-purple-500/20'}`}>
-              <span className={`text-[10px] uppercase font-semibold ${mode === 'Pressure' ? 'text-rose-400 font-bold' : 'text-slate-500'}`}>
-                {mode === 'Pressure' ? 'BAR RAISER TECHNICAL CHALLENGE:' : 'AI INTERVIEWER ASKED:'}
-              </span>
-              <h3 className="text-lg font-bold text-white leading-snug">{currentQuestion}</h3>
+            <div className="p-4 rounded-lg bg-[#232325] border border-white/[0.08] space-y-1.5">
+              <span className="text-[10px] font-mono text-[#85858b] uppercase">Interviewer question</span>
+              <h3 className="text-sm font-medium text-[#ededed] leading-relaxed">{currentQuestion}</h3>
             </div>
 
-            <form onSubmit={handleSubmitAnswer} className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-semibold text-slate-300 uppercase">Your Response</label>
+            <form onSubmit={handleSubmitAnswer} className="space-y-3">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-[#85858b]">
+                  <span>Your response</span>
                   <button
                     type="button"
                     onClick={handleSpeechToggle}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
-                      isRecording
-                        ? 'bg-rose-950 border-rose-500 text-rose-300 animate-pulse'
-                        : 'bg-slate-900 border-slate-800 text-purple-400 hover:border-purple-500/50'
+                    className={`flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
+                      isRecording ? 'bg-rose-500 text-[#0f0f10]' : 'bg-[#232325] text-[#a1a1a6] hover:text-[#ededed]'
                     }`}
                   >
-                    <Mic className="w-3.5 h-3.5" />
-                    {isRecording ? 'Listening (Speak Now)...' : 'Voice Input (Mic)'}
+                    <Mic className="w-3 h-3 text-rose-400" />
+                    {isRecording ? 'Listening...' : 'Voice input'}
                   </button>
                 </div>
 
@@ -283,37 +278,37 @@ export default function MockInterview() {
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
                   placeholder="Type your response or use voice input..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 focus:outline-none focus:border-purple-500 transition-colors"
+                  className="w-full bg-[#232325] border border-white/[0.08] focus:border-white/[0.2] rounded-lg p-3 text-xs text-[#ededed] placeholder-[#85858b] focus:outline-none leading-relaxed resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full gradient-btn py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+                className="w-full btn-primary py-2.5 flex items-center justify-center gap-1.5"
               >
-                {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                Submit Answer & Evaluate
+                {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                Submit response
               </button>
             </form>
           </div>
 
           {/* Evaluations Drawer */}
-          <div className="glass-card p-6 border border-slate-800 space-y-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-purple-400" /> Per-Answer Evaluations
+          <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-3">
+            <h3 className="text-xs font-mono uppercase text-[#85858b] flex items-center gap-1.5">
+              <BarChart3 className="w-3.5 h-3.5" /> Evaluations ({evaluations.length})
             </h3>
             {evaluations.length === 0 ? (
-              <p className="text-xs text-slate-500 italic">Answers and scores will appear here as you progress.</p>
+              <p className="text-xs text-[#85858b] font-mono">Answers and scores will appear here as you submit.</p>
             ) : (
-              <div className="space-y-4 overflow-y-auto max-h-[450px]">
+              <div className="space-y-2 overflow-y-auto max-h-[420px]">
                 {evaluations.map((evalItem, idx) => (
-                  <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-2">
-                    <div className="flex justify-between items-center font-bold text-white">
-                      <span>Q{idx + 1} Score:</span>
-                      <span className="text-purple-400">{evalItem.technical_score}%</span>
+                  <div key={idx} className="p-3 rounded-lg bg-[#232325] border border-white/[0.08] text-xs space-y-1">
+                    <div className="flex justify-between items-center font-mono">
+                      <span className="text-[#85858b]">Q{idx + 1} score:</span>
+                      <span className="text-emerald-400 font-medium">{evalItem.technical_score}%</span>
                     </div>
-                    <p className="text-slate-400 italic">"{evalItem.feedback}"</p>
+                    <p className="text-[#a1a1a6] text-[11px] leading-relaxed">"{evalItem.feedback}"</p>
                   </div>
                 ))}
               </div>
@@ -322,46 +317,46 @@ export default function MockInterview() {
         </div>
       ) : (
         /* Final Interview Report */
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-8 border border-slate-800 max-w-3xl mx-auto space-y-6">
-          <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-full bg-purple-600/20 border border-purple-500/30 text-purple-400 mx-auto flex items-center justify-center">
-              <Award className="w-8 h-8" />
-            </div>
-            <h2 className="text-2xl font-bold text-white">
-              {mode === 'Pressure' ? 'Pressure Interview Evaluation' : 'Mock Interview Complete'}
-            </h2>
-            <p className="text-xs text-slate-400">Target Role: {finalReport.role} | Difficulty: {finalReport.difficulty}</p>
-            <div className={`text-4xl font-extrabold pt-2 ${mode === 'Pressure' ? 'text-rose-400' : 'gradient-text'}`}>
+        <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-6 max-w-2xl mx-auto space-y-5">
+          <div className="text-center space-y-1.5">
+            <span className="text-xs font-mono text-[#85858b] uppercase">Interview assessment</span>
+            <div className="text-4xl font-mono text-[#ededed] font-medium tabular-nums">
               {finalReport.overall_score}%
             </div>
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
-              {mode === 'Pressure' ? 'PRESSURE INTERVIEW SCORE' : 'Overall Performance Index'}
-            </span>
+            <p className="text-xs text-[#85858b]">Target: {finalReport.role} • Difficulty: {finalReport.difficulty}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/20 text-xs space-y-2">
-              <h4 className="font-bold text-emerald-400">Key Strengths</h4>
-              {finalReport.strengths?.map((s, idx) => (
-                <p key={idx} className="text-slate-300">• {s}</p>
-              ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="p-3.5 rounded-lg bg-[#232325] border border-white/[0.08] space-y-1.5">
+              <h4 className="font-mono text-emerald-400 text-[11px]">Key strengths</h4>
+              <ul className="space-y-1 text-[#a1a1a6]">
+                {finalReport.strengths?.map((s, idx) => (
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-emerald-400">•</span> {s}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/20 text-xs space-y-2">
-              <h4 className="font-bold text-amber-400">Improvement Plan</h4>
-              {finalReport.improvement_plan?.map((p, idx) => (
-                <p key={idx} className="text-slate-300">• {p}</p>
-              ))}
+            <div className="p-3.5 rounded-lg bg-[#232325] border border-white/[0.08] space-y-1.5">
+              <h4 className="font-mono text-amber-400 text-[11px]">Recommended focus</h4>
+              <ul className="space-y-1 text-[#a1a1a6]">
+                {finalReport.improvement_plan?.map((p, idx) => (
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-amber-400">•</span> {p}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
           <button
             onClick={() => setSession(null)}
-            className="w-full gradient-btn py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+            className="w-full btn-primary py-2.5 flex items-center justify-center gap-1.5"
           >
-            <RotateCcw className="w-4 h-4" /> Start Another Session
+            <RotateCcw className="w-3.5 h-3.5" /> Start another session
           </button>
-        </motion.div>
+        </div>
       )}
     </div>
   );

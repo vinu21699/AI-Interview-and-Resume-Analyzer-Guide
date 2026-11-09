@@ -3,11 +3,10 @@ import { useNotification } from '../context/NotificationContext';
 import api from '../services/api';
 import { speakText, createSpeechRecognition } from '../services/speechService';
 import {
-  ShieldCheck, AlertTriangle, CheckCircle2, HelpCircle,
-  Sparkles, RefreshCw, Mic, Volume2, ArrowRight, ArrowLeft,
-  ChevronRight, Award, Zap, AlertCircle, FileText, Check
+  ShieldCheck, AlertTriangle, HelpCircle,
+  RefreshCw, Mic, Volume2, ArrowRight, ArrowLeft,
+  ChevronRight, AlertCircle, FileText, Check
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ResumeClaimVerification() {
   const [claims, setClaims] = useState([]);
@@ -44,7 +43,7 @@ export default function ResumeClaimVerification() {
     try {
       const res = await api.post('/claims/extract', {});
       setClaims(res.data.claims || []);
-      addToast(`Extracted ${res.data.claims?.length || 0} technical resume claims!`, 'success');
+      addToast(`Extracted ${res.data.claims?.length || 0} technical resume claims.`, 'success');
     } catch (err) {
       addToast('Failed to extract claims from resume.', 'error');
     } finally {
@@ -66,7 +65,6 @@ export default function ResumeClaimVerification() {
       risk_analysis: claim.risk_analysis
     } : null);
 
-    // Speak first question
     if (claim.questions && claim.questions.length > 0) {
       speakText(claim.questions[0]);
     }
@@ -88,7 +86,7 @@ export default function ResumeClaimVerification() {
           return updated;
         });
         setIsRecording(false);
-        addToast('Voice transcribed!', 'success');
+        addToast('Voice transcribed.', 'success');
       },
       (err) => {
         setIsRecording(false);
@@ -100,7 +98,7 @@ export default function ResumeClaimVerification() {
       setIsRecording(true);
       recognition.start();
     } else {
-      addToast('Speech recognition not supported in your browser.', 'error');
+      addToast('Speech recognition is not supported in this browser.', 'error');
     }
   };
 
@@ -134,8 +132,7 @@ export default function ResumeClaimVerification() {
         answers: answers
       });
       setVerificationResult(res.data.evaluation);
-      addToast('Claim verification evaluated successfully!', 'success');
-      // Update local state list
+      addToast('Claim verification evaluated.', 'success');
       setClaims(prev => prev.map(c => c.id === selectedClaim.id ? res.data.claim : c));
     } catch (err) {
       addToast('Claim verification failed.', 'error');
@@ -144,70 +141,63 @@ export default function ResumeClaimVerification() {
     }
   };
 
-  const getScoreColor = (score) => {
-    if (score >= 80) return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
-    if (score >= 60) return 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-    return 'text-rose-400 bg-rose-500/10 border-rose-500/30';
-  };
-
   const getConfidenceBadge = (score) => {
-    if (score >= 80) return { label: 'Strong', badge: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' };
-    if (score >= 60) return { label: 'Moderate', badge: 'bg-amber-500/10 border-amber-500/30 text-amber-400' };
-    return { label: 'Needs Improvement', badge: 'bg-rose-500/10 border-rose-500/30 text-rose-400' };
+    if (score >= 80) return { label: 'Strong', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' };
+    if (score >= 60) return { label: 'Moderate', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' };
+    return { label: 'Needs verification', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' };
   };
 
   return (
-    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8 font-sans">
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-6 font-sans">
       
-      {/* Top Banner */}
-      <div className="glass-card p-6 sm:p-8 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-500/20 rounded-3xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
-        <div className="space-y-2 z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-400">
-            <ShieldCheck className="w-3.5 h-3.5" /> AI Resume Claim Verification Engine
+      {/* Top Header Bar */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#85858b]">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Integrity auditing</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-            Verify Your <span className="text-emerald-400">Resume Claims</span>
+          <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-[#ededed]">
+            Resume claim verification
           </h1>
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Technical recruiters and hiring managers cross-examine specific claims made in your resume. Answer targeted technical questions to test your real-world understanding before interviewing.
+          <p className="text-xs text-[#a1a1a6] max-w-xl leading-relaxed">
+            Technical interviewers cross-examine specific claims made in your resume. Answer targeted 4-question checks to test your real-world depth.
           </p>
         </div>
 
         <button
           onClick={handleExtractNew}
           disabled={extracting}
-          className="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500/50 text-xs font-bold text-slate-200 transition-all flex items-center gap-2 shrink-0 shadow-lg"
+          className="btn-secondary text-xs py-1.5 flex items-center gap-2 shrink-0"
         >
-          <RefreshCw className={`w-4 h-4 text-emerald-400 ${extracting ? 'animate-spin' : ''}`} />
-          {extracting ? 'Analyzing Resume...' : 'Re-extract Claims'}
+          <RefreshCw className={`w-3.5 h-3.5 ${extracting ? 'animate-spin' : ''}`} />
+          {extracting ? 'Extracting...' : 'Re-extract claims'}
         </button>
       </div>
 
       {/* Claims List Grid */}
       {loading ? (
-        <div className="p-16 text-center text-slate-400 flex items-center justify-center gap-3">
-          <span className="w-5 h-5 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></span>
-          Extracting and indexing resume claims...
+        <div className="p-16 text-center text-[#85858b] text-xs font-mono flex items-center justify-center gap-2">
+          <span className="w-4 h-4 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></span>
+          Extracting claims from resume...
         </div>
       ) : claims.length === 0 ? (
-        <div className="p-12 glass-card text-center space-y-4 rounded-3xl border border-slate-800">
-          <FileText className="w-12 h-12 text-slate-600 mx-auto" />
-          <h3 className="text-lg font-bold text-white">No Resume Claims Identified Yet</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">Upload your resume in the Resume Analyzer or click below to analyze standard engineering claims.</p>
-          <button onClick={handleExtractNew} className="gradient-btn px-6 py-2.5 rounded-xl text-xs font-bold">
-            Extract Claims Now
+        <div className="p-12 bg-[#19191b] text-center space-y-3 rounded-xl border border-white/[0.08]">
+          <FileText className="w-8 h-8 text-[#85858b] mx-auto" />
+          <h3 className="text-sm font-medium text-[#ededed]">No resume claims identified yet</h3>
+          <p className="text-xs text-[#85858b] max-w-sm mx-auto">Upload a resume in the analyzer or click below to extract standard claims.</p>
+          <button onClick={handleExtractNew} className="btn-primary text-xs">
+            Extract claims now
           </button>
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-black text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400" /> Extracted Technical Claims ({claims.length})
-            </h2>
-            <span className="text-xs text-slate-400 font-semibold">Select a claim to begin interactive verification</span>
+          <div className="flex items-center justify-between text-xs text-[#85858b] font-mono">
+            <span>Identified claims ({claims.length})</span>
+            <span>Select a claim to verify</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {claims.map((claim) => {
               const verified = claim.status === 'verified';
               const badge = verified ? getConfidenceBadge(claim.claim_confidence) : null;
@@ -215,43 +205,39 @@ export default function ResumeClaimVerification() {
                 <div
                   key={claim.id}
                   onClick={() => openClaimModal(claim)}
-                  className="bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-5 space-y-4 cursor-pointer transition-all hover:scale-[1.01] flex flex-col justify-between group shadow-lg"
+                  className="bg-[#19191b] hover:bg-[#1e1e21] border border-white/[0.08] hover:border-white/[0.16] rounded-xl p-4 space-y-3 cursor-pointer transition-colors flex flex-col justify-between"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 uppercase tracking-wider">
-                        {claim.related_skill || 'Core Skill'}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono">
+                      <span className="px-2 py-0.5 rounded bg-[#232325] text-[#a1a1a6]">
+                        {claim.related_skill || 'Core skill'}
                       </span>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                        claim.importance === 'Critical' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-400' :
-                        claim.importance === 'High' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
-                        'bg-blue-500/10 border border-blue-500/30 text-blue-400'
+                      <span className={`px-2 py-0.5 rounded ${
+                        claim.importance === 'Critical' ? 'bg-rose-500/10 text-rose-400' :
+                        claim.importance === 'High' ? 'bg-amber-500/10 text-amber-400' :
+                        'bg-blue-500/10 text-blue-400'
                       }`}>
-                        {claim.importance} Impact
+                        {claim.importance}
                       </span>
                     </div>
 
-                    <div>
-                      <h3 className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors leading-snug">
-                        "{claim.claim_text}"
-                      </h3>
-                    </div>
+                    <h3 className="text-xs font-medium text-[#ededed] leading-snug">
+                      "{claim.claim_text}"
+                    </h3>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
+                  <div className="pt-2.5 border-t border-white/[0.04] flex items-center justify-between text-xs font-mono">
                     {verified ? (
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded-md border font-extrabold text-[10px] ${badge.badge}`}>
-                          {badge.label} • {claim.claim_confidence}%
-                        </span>
-                      </div>
+                      <span className={`px-2 py-0.5 rounded border text-[10px] ${badge.color}`}>
+                        {badge.label} • {claim.claim_confidence}%
+                      </span>
                     ) : (
-                      <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
-                        <HelpCircle className="w-3.5 h-3.5 text-slate-500" /> 4 Questions Ready
+                      <span className="text-[11px] text-[#85858b] flex items-center gap-1.5">
+                        <HelpCircle className="w-3.5 h-3.5" /> 4 questions ready
                       </span>
                     )}
 
-                    <span className="text-emerald-400 font-bold text-xs flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span className="text-emerald-400 text-xs flex items-center gap-1">
                       {verified ? 'Review' : 'Verify'} <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -262,225 +248,197 @@ export default function ResumeClaimVerification() {
         </div>
       )}
 
-      {/* Interactive Verification Modal */}
-      <AnimatePresence>
-        {selectedClaim && (
-          <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative my-8"
-            >
-              {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-bold text-emerald-400 uppercase">
-                      VERIFY THIS CLAIM
-                    </span>
-                    <span className="text-xs text-slate-400 font-semibold">{selectedClaim.related_skill}</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-white leading-snug">
-                    "{selectedClaim.claim_text}"
-                  </h3>
+      {/* Verification Dialog */}
+      {selectedClaim && (
+        <div className="fixed inset-0 z-50 bg-[#0f0f10]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#19191b] border border-white/[0.08] rounded-xl max-w-xl w-full p-6 space-y-5 my-8">
+            <div className="flex items-start justify-between gap-4 border-b border-white/[0.08] pb-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs font-mono text-[#85858b]">
+                  <span className="text-emerald-400">Claim test</span>
+                  <span>•</span>
+                  <span>{selectedClaim.related_skill}</span>
                 </div>
-
-                <button
-                  onClick={() => setSelectedClaim(null)}
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold shrink-0"
-                >
-                  ✕
-                </button>
+                <h3 className="text-sm font-medium text-[#ededed] leading-snug">
+                  "{selectedClaim.claim_text}"
+                </h3>
               </div>
 
-              {/* If already evaluated, show verification scorecard */}
-              {verificationResult ? (
-                <div className="space-y-6">
-                  <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center space-y-3">
-                    <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">CLAIM CONFIDENCE SCORE</span>
-                    <div className="text-4xl font-black text-white flex items-center justify-center gap-2">
-                      <span className={verificationResult.claim_confidence >= 80 ? 'text-emerald-400' : verificationResult.claim_confidence >= 60 ? 'text-amber-400' : 'text-rose-400'}>
-                        {verificationResult.claim_confidence}%
-                      </span>
-                    </div>
+              <button
+                onClick={() => setSelectedClaim(null)}
+                className="w-7 h-7 rounded bg-[#232325] hover:bg-[#2c2c30] text-[#85858b] hover:text-[#ededed] flex items-center justify-center text-xs shrink-0"
+              >
+                ✕
+              </button>
+            </div>
 
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase"
-                      style={{
-                        backgroundColor: verificationResult.claim_confidence >= 80 ? 'rgba(16, 185, 129, 0.1)' : verificationResult.claim_confidence >= 60 ? 'rgba(245, 158, 11, 0.1)' : 'rgba(244, 63, 94, 0.1)',
-                        borderColor: verificationResult.claim_confidence >= 80 ? '#10b981' : verificationResult.claim_confidence >= 60 ? '#f59e0b' : '#f43f5e',
-                        color: verificationResult.claim_confidence >= 80 ? '#34d399' : verificationResult.claim_confidence >= 60 ? '#fbbf24' : '#fb7185'
-                      }}>
-                      {verificationResult.claim_confidence >= 80 ? 'Strong Confidence' : verificationResult.claim_confidence >= 60 ? 'Moderate Confidence' : 'Needs Verification'}
-                    </div>
+            {verificationResult ? (
+              <div className="space-y-5">
+                <div className="bg-[#232325] border border-white/[0.08] rounded-lg p-5 text-center space-y-2">
+                  <span className="text-xs font-mono text-[#85858b] uppercase">Claim confidence</span>
+                  <div className="text-3xl font-mono text-[#ededed] font-medium">
+                    {verificationResult.claim_confidence}%
                   </div>
+                  <div className="text-xs font-mono text-emerald-400">
+                    {verificationResult.claim_confidence >= 80 ? 'Strong evidence' : verificationResult.claim_confidence >= 60 ? 'Moderate evidence' : 'Needs verification'}
+                  </div>
+                </div>
 
-                  {/* 4 Pillar Breakdown */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {[
-                      { label: "Technical Accuracy", score: verificationResult.technical_accuracy },
-                      { label: "Understanding", score: verificationResult.understanding_score },
-                      { label: "Confidence", score: verificationResult.confidence_score },
-                      { label: "Communication", score: verificationResult.communication_score }
-                    ].map((p, idx) => (
-                      <div key={idx} className="bg-slate-950/70 border border-slate-800 p-3 rounded-xl text-center space-y-1">
-                        <span className="text-[10px] text-slate-400 font-semibold uppercase">{p.label}</span>
-                        <div className={`text-lg font-black ${p.score >= 80 ? 'text-emerald-400' : p.score >= 60 ? 'text-amber-400' : 'text-rose-400'}`}>
-                          {p.score}%
-                        </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { label: "Technical accuracy", score: verificationResult.technical_accuracy },
+                    { label: "Understanding", score: verificationResult.understanding_score },
+                    { label: "Confidence", score: verificationResult.confidence_score },
+                    { label: "Communication", score: verificationResult.communication_score }
+                  ].map((p, idx) => (
+                    <div key={idx} className="bg-[#232325] border border-white/[0.08] p-2.5 rounded-lg text-center space-y-0.5">
+                      <span className="text-[10px] text-[#85858b] block font-mono">{p.label}</span>
+                      <div className="text-sm font-mono text-[#ededed] font-medium">
+                        {p.score}%
                       </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-3.5 rounded-lg bg-[#232325] border border-white/[0.08] space-y-1">
+                  <h4 className="text-xs font-medium text-[#ededed] flex items-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 text-blue-400" /> Evidence assessment
+                  </h4>
+                  <p className="text-xs text-[#a1a1a6] leading-relaxed">
+                    {verificationResult.risk_analysis}
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-lg bg-[#232325] border border-white/[0.08] space-y-1">
+                  <h4 className="text-xs font-medium text-emerald-400">
+                    Examiner feedback
+                  </h4>
+                  <p className="text-xs text-[#a1a1a6] leading-relaxed">
+                    {verificationResult.feedback}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <button
+                    onClick={() => setVerificationResult(null)}
+                    className="btn-secondary text-xs"
+                  >
+                    Re-answer
+                  </button>
+                  <button
+                    onClick={() => setSelectedClaim(null)}
+                    className="btn-primary text-xs"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs font-mono text-[#85858b]">
+                  <span>Question {activeQuestionIdx + 1} of 4</span>
+                  <div className="flex items-center gap-1">
+                    {[0, 1, 2, 3].map((idx) => (
+                      <div
+                        key={idx}
+                        className={`w-5 h-1 rounded transition-colors ${
+                          idx === activeQuestionIdx ? 'bg-emerald-400' :
+                          answers[idx]?.trim() ? 'bg-emerald-500/40' : 'bg-[#232325]'
+                        }`}
+                      />
                     ))}
                   </div>
+                </div>
 
-                  {/* Constructive Risk Analysis Note */}
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                    <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                      <AlertCircle className="w-3.5 h-3.5 text-blue-400" /> AI Evidence Assessment
-                    </h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      {verificationResult.risk_analysis}
+                <div className="bg-[#232325] border border-white/[0.08] p-4 rounded-lg space-y-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="text-xs font-medium text-[#ededed] leading-relaxed">
+                      {selectedClaim?.questions?.[activeQuestionIdx] || 'Explain your technical implementation in detail.'}
                     </p>
-                  </div>
-
-                  {/* Constructive Feedback */}
-                  <div className="p-4 rounded-2xl bg-emerald-950/20 border border-emerald-500/20 space-y-1.5">
-                    <h4 className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                      <Zap className="w-3.5 h-3.5" /> Examiner Feedback
-                    </h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      {verificationResult.feedback}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2">
                     <button
-                      onClick={() => setVerificationResult(null)}
-                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition-colors"
+                      onClick={() => speakText(selectedClaim?.questions?.[activeQuestionIdx])}
+                      className="p-1 rounded bg-[#19191b] hover:bg-[#2b2b2f] text-[#85858b] hover:text-[#ededed] shrink-0"
+                      title="Listen"
                     >
-                      Re-answer Questions
-                    </button>
-                    <button
-                      onClick={() => setSelectedClaim(null)}
-                      className="gradient-btn px-6 py-2 rounded-xl text-xs font-bold"
-                    >
-                      Done
+                      <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
                     </button>
                   </div>
                 </div>
-              ) : (
-                /* Question & Answer Flow */
-                <div className="space-y-6">
-                  {/* Stepper Header */}
-                  <div className="flex items-center justify-between text-xs text-slate-400">
-                    <span className="font-bold text-emerald-400">Question {activeQuestionIdx + 1} of 4</span>
-                    <div className="flex items-center gap-1.5">
-                      {[0, 1, 2, 3].map((idx) => (
-                        <div
-                          key={idx}
-                          className={`w-6 h-1.5 rounded-full transition-all ${
-                            idx === activeQuestionIdx ? 'bg-emerald-400 w-8' :
-                            answers[idx]?.trim() ? 'bg-emerald-500/40' : 'bg-slate-800'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
 
-                  {/* Question Prompt */}
-                  <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-2 relative">
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-sm font-bold text-white leading-relaxed">
-                        {selectedClaim?.questions?.[activeQuestionIdx] || 'Explain your technical implementation in detail.'}
-                      </p>
-                      <button
-                        onClick={() => speakText(selectedClaim?.questions?.[activeQuestionIdx])}
-                        className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white shrink-0"
-                        title="Listen to question"
-                      >
-                        <Volume2 className="w-4 h-4 text-emerald-400" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Candidate Answer Box with Voice Integration */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <label className="font-semibold text-slate-300">Your Technical Response</label>
-                      <button
-                        type="button"
-                        onClick={handleSpeechInput}
-                        className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                          isRecording
-                            ? 'bg-rose-500 text-white animate-pulse'
-                            : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-                        }`}
-                      >
-                        <Mic className="w-3.5 h-3.5 text-emerald-400" />
-                        {isRecording ? 'Listening...' : 'Voice Input'}
-                      </button>
-                    </div>
-
-                    <textarea
-                      rows={5}
-                      value={answers[activeQuestionIdx]}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setAnswers(prev => {
-                          const updated = [...prev];
-                          updated[activeQuestionIdx] = val;
-                          return updated;
-                        });
-                      }}
-                      placeholder="Explain your hands-on implementation, architectural decisions, and error-handling mechanisms..."
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-2xl p-4 text-xs text-white placeholder-slate-500 focus:outline-none leading-relaxed resize-none"
-                    />
-                  </div>
-
-                  {/* Navigation & Submit Controls */}
-                  <div className="flex items-center justify-between pt-2">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs text-[#85858b]">
+                    <span>Your technical answer</span>
                     <button
                       type="button"
-                      onClick={handlePrevQuestion}
-                      disabled={activeQuestionIdx === 0}
-                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold text-slate-300 transition-colors flex items-center gap-1.5"
+                      onClick={handleSpeechInput}
+                      className={`flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
+                        isRecording ? 'bg-rose-500 text-[#0f0f10]' : 'bg-[#232325] text-[#a1a1a6] hover:text-[#ededed]'
+                      }`}
                     >
-                      <ArrowLeft className="w-3.5 h-3.5" /> Previous
+                      <Mic className="w-3 h-3 text-emerald-400" />
+                      {isRecording ? 'Listening...' : 'Voice input'}
                     </button>
-
-                    {activeQuestionIdx < 3 ? (
-                      <button
-                        type="button"
-                        onClick={handleNextQuestion}
-                        className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition-colors flex items-center gap-1.5 border border-slate-700"
-                      >
-                        Next Question <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={handleSubmitVerification}
-                        disabled={verifying}
-                        className="gradient-btn px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg"
-                      >
-                        {verifying ? (
-                          <>
-                            <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-                            Evaluating Claim...
-                          </>
-                        ) : (
-                          <>
-                            <Check className="w-4 h-4" /> Evaluate & Verify Claim
-                          </>
-                        )}
-                      </button>
-                    )}
                   </div>
+
+                  <textarea
+                    rows={4}
+                    value={answers[activeQuestionIdx]}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setAnswers(prev => {
+                        const updated = [...prev];
+                        updated[activeQuestionIdx] = val;
+                        return updated;
+                      });
+                    }}
+                    placeholder="Explain your architectural design, implementation specifics, and error handling..."
+                    className="w-full bg-[#232325] border border-white/[0.08] focus:border-emerald-500/50 rounded-lg p-3 text-xs text-[#ededed] placeholder-[#85858b] focus:outline-none leading-relaxed resize-none"
+                  />
                 </div>
-              )}
-            </motion.div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <button
+                    type="button"
+                    onClick={handlePrevQuestion}
+                    disabled={activeQuestionIdx === 0}
+                    className="btn-secondary text-xs disabled:opacity-30 disabled:pointer-events-none flex items-center gap-1"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" /> Previous
+                  </button>
+
+                  {activeQuestionIdx < 3 ? (
+                    <button
+                      type="button"
+                      onClick={handleNextQuestion}
+                      className="btn-secondary text-xs flex items-center gap-1"
+                    >
+                      Next <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSubmitVerification}
+                      disabled={verifying}
+                      className="btn-accent text-xs flex items-center gap-1.5"
+                    >
+                      {verifying ? (
+                        <>
+                          <span className="w-3 h-3 rounded-full border-2 border-[#06281e] border-t-transparent animate-spin"></span>
+                          Evaluating...
+                        </>
+                      ) : (
+                        <>
+                          <Check className="w-3.5 h-3.5" /> Complete verification
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
 
     </div>
   );

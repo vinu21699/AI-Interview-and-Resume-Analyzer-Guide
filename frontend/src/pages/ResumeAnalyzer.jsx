@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
 import api from '../services/api';
 import {
-  Upload, FileText, CheckCircle2, AlertTriangle, Sparkles, Download,
-  Layers, Check, ArrowRight, RefreshCw, Copy, FileEdit, Wand2,
-  XCircle, ChevronDown, ChevronUp, ShieldCheck, Award, Zap, Sliders,
-  Eye, FileCheck, ArrowUpRight, Maximize2
+  Upload, FileText, CheckCircle2, AlertTriangle, Download,
+  RefreshCw, Copy, FileEdit, Sliders, Award, Zap, ShieldCheck
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { downloadAtsPdfFromMarkdown } from '../utils/atsPdfGenerator';
 
 export default function ResumeAnalyzer() {
@@ -17,8 +15,6 @@ export default function ResumeAnalyzer() {
   const [showTextInput, setShowTextInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'critical' | 'warning' | 'passed'
-  const [expandedCheckId, setExpandedCheckId] = useState(null);
   const [atsResume, setAtsResume] = useState('');
   const [generatingResume, setGeneratingResume] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -26,7 +22,6 @@ export default function ResumeAnalyzer() {
   const { addToast } = useNotification();
   const navigate = useNavigate();
 
-  // Load initial analysis if passed from landing page
   useEffect(() => {
     const cached = sessionStorage.getItem('initialAnalysis');
     if (cached) {
@@ -52,7 +47,7 @@ export default function ResumeAnalyzer() {
   const handleAnalyze = async (e) => {
     if (e) e.preventDefault();
     if (!file && !rawText.trim()) {
-      addToast('Please upload your resume file (PDF or DOCX) first.', 'warning');
+      addToast('Please upload a PDF or DOCX file first.', 'warning');
       const fileInput = document.getElementById('analyzer-resume-file-input');
       if (fileInput) fileInput.click();
       return;
@@ -72,9 +67,9 @@ export default function ResumeAnalyzer() {
       setResult(res.data.analysis);
       if (res.data.raw_text) setRawText(res.data.raw_text);
 
-      addToast('Resume analysis complete!', 'success');
+      addToast('Resume analysis complete.', 'success');
     } catch (err) {
-      addToast(err.response?.data?.detail || 'Analysis failed. Please check file format.', 'error');
+      addToast(err.response?.data?.detail || 'Analysis failed. Check your file format.', 'error');
     } finally {
       setLoading(false);
     }
@@ -83,22 +78,22 @@ export default function ResumeAnalyzer() {
   const handleSampleAnalyze = async () => {
     const sample = `John Doe
 Senior Software Engineer
-Email: john.doe@antigravity.ai | Phone: (555) 234-5678 | San Francisco, CA
+Email: john.doe@example.com | Phone: (555) 234-5678 | San Francisco, CA
 LinkedIn: linkedin.com/in/johndoe | GitHub: github.com/johndoe
 
 PROFESSIONAL SUMMARY
-Results-oriented Senior Software Engineer with 6+ years of experience architecting distributed cloud systems, high-throughput microservices, and modern frontend applications using Python, React, FastAPI, and PostgreSQL.
+Senior Software Engineer with 6+ years of experience architecting distributed backend services, high-throughput microservices, and modern web applications using Python, React, FastAPI, and PostgreSQL.
 
 PROFESSIONAL EXPERIENCE
 Senior Software Engineer | CloudScale Inc. | 2022 - Present
-- Architected high-throughput RESTful microservices in FastAPI and PostgreSQL, reducing p99 response latency by 38% across 1.4M daily active requests.
-- Spearheaded migration of monolithic services to Kubernetes and Docker on AWS, cutting infrastructure cloud spend by $120,000 annually.
-- Mentored 5 junior and mid-level engineers, leading weekly sprint architecture reviews and standardizing CI/CD deployment pipelines.
+- Architected high-throughput RESTful microservices in FastAPI and PostgreSQL, reducing p99 response latency by 38% across 1.4M daily requests.
+- Spearheaded migration of monolithic services to Kubernetes and Docker on AWS, cutting infrastructure spend by $120,000 annually.
+- Mentored 5 junior engineers and standardized CI/CD deployment pipelines.
 
 Software Developer | FinTech Nexus | 2019 - 2022
 - Developed core payment transaction engine processing $15M+ in monthly transaction volume with 99.99% system uptime.
 - Optimized PostgreSQL database queries and connection pooling, boosting query throughput by 42%.
-- Implemented real-time dashboard analytics using React, TypeScript, and Tailwind CSS.
+- Built real-time dashboard analytics using React, TypeScript, and Tailwind CSS.
 
 EDUCATION
 B.S. in Computer Science | University of California, Berkeley | 2019
@@ -118,16 +113,12 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
       const res = await api.post('/resume/analyze', formData);
       setResult(res.data.analysis);
       setRawText(res.data.raw_text || sample);
-      addToast('Sample resume audit loaded successfully!', 'success');
+      addToast('Sample resume audit loaded.', 'success');
     } catch (err) {
       addToast(err.response?.data?.detail || 'Sample load failed.', 'error');
     } finally {
       setLoading(false);
     }
-  };
-
-  const toggleCheck = (id) => {
-    setExpandedCheckId(prev => (prev === id ? null : id));
   };
 
   const handleGenerateFullATSResume = async () => {
@@ -142,9 +133,9 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
       });
 
       setAtsResume(res.data.resume_markdown);
-      addToast('Generated 100% ATS-Optimized Resume!', 'success');
+      addToast('Generated ATS-optimized resume.', 'success');
     } catch (err) {
-      addToast('Failed to generate ATS resume', 'error');
+      addToast('Failed to generate ATS resume.', 'error');
     } finally {
       setGeneratingResume(false);
     }
@@ -154,28 +145,27 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
     if (!atsResume) return;
     navigator.clipboard.writeText(atsResume);
     setCopied(true);
-    addToast('100% ATS Resume content copied to clipboard!', 'success');
+    addToast('Resume content copied.', 'success');
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleCopyBullet = (text, idx) => {
     navigator.clipboard.writeText(text);
     setCopiedBulletIdx(idx);
-    addToast('Improved CAR bullet copied to clipboard!', 'success');
+    addToast('Bullet copied.', 'success');
     setTimeout(() => setCopiedBulletIdx(null), 2000);
   };
 
   const handleDownloadPDF = () => {
     const resumeTextToExport = atsResume || rawText;
     if (!resumeTextToExport || !resumeTextToExport.trim()) {
-      addToast('No resume content available to download. Please generate or analyze a resume first.', 'warning');
+      addToast('No resume content available to download.', 'warning');
       return;
     }
 
     try {
-      addToast('Downloading 100% ATS Vector-Text PDF directly to your device...', 'info');
-      downloadAtsPdfFromMarkdown(resumeTextToExport, '100%_ATS_Optimized_Resume.pdf');
-      addToast('100% ATS-Compliant PDF downloaded successfully!', 'success');
+      downloadAtsPdfFromMarkdown(resumeTextToExport, 'ats_optimized_resume.pdf');
+      addToast('PDF downloaded successfully.', 'success');
     } catch (err) {
       console.error(err);
       addToast('Failed to export PDF: ' + err.message, 'error');
@@ -185,13 +175,13 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
   const parseMarkdownToHTML = (markdown) => {
     if (!markdown) return '';
     return markdown
-      .replace(/^# (.*$)/gim, '<h1 style="font-family: Arial, Calibri, Helvetica, sans-serif; font-size: 20px; font-weight: 800; color: #0f172a; text-transform: uppercase; text-align: center; margin-bottom: 4px;">$1</h1>')
-      .replace(/^\*\*(.*?)\*\*/gim, '<div style="font-family: Arial, Calibri, Helvetica, sans-serif; font-size: 12px; font-weight: 700; color: #475569; text-align: center; margin-bottom: 6px;">$1</div>')
-      .replace(/^## (.*$)/gim, '<h2 style="font-family: Arial, Calibri, Helvetica, sans-serif; font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 3px; margin-top: 14px; margin-bottom: 6px;">$1</h2>')
-      .replace(/^### (.*$)/gim, '<h3 style="font-family: Arial, Calibri, Helvetica, sans-serif; font-size: 11.5px; font-weight: 700; color: #1e293b; margin-top: 8px; margin-bottom: 3px;">$1</h3>')
-      .replace(/^\- (.*$)/gim, '<li style="font-family: Arial, Calibri, Helvetica, sans-serif; margin-bottom: 3px; font-size: 11px; color: #334155; line-height: 1.5;">$1</li>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong style="font-family: Arial, Calibri, Helvetica, sans-serif; color: #0f172a; font-weight: 700;">$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em style="font-family: Arial, Calibri, Helvetica, sans-serif; color: #475569;">$1</em>');
+      .replace(/^# (.*$)/gim, '<h1 style="font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: #111827; text-transform: uppercase; text-align: center; margin-bottom: 4px;">$1</h1>')
+      .replace(/^\*\*(.*?)\*\*/gim, '<div style="font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; color: #4b5563; text-align: center; margin-bottom: 6px;">$1</div>')
+      .replace(/^## (.*$)/gim, '<h2 style="font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; color: #111827; text-transform: uppercase; border-bottom: 1px solid #d1d5db; padding-bottom: 2px; margin-top: 12px; margin-bottom: 4px;">$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3 style="font-family: Arial, sans-serif; font-size: 10.5px; font-weight: 600; color: #1f2937; margin-top: 6px; margin-bottom: 2px;">$1</h3>')
+      .replace(/^\- (.*$)/gim, '<li style="font-family: Arial, sans-serif; margin-bottom: 2px; font-size: 10.5px; color: #374151; line-height: 1.45;">$1</li>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong style="font-family: Arial, sans-serif; color: #111827; font-weight: 600;">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em style="font-family: Arial, sans-serif; color: #4b5563;">$1</em>');
   };
 
   const reportData = result?.report_data || {};
@@ -200,15 +190,15 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
   const overallScore = reportData?.overall_score ?? result?.ats_score ?? 0;
   const atsParseRate = reportData?.ats_parse_rate ?? result?.formatting_score ?? 0;
   const recruiterReview = reportData?.recruiter_review ?? result?.experience_score ?? 0;
-  const grade = reportData?.grade || (overallScore >= 92 ? "Outstanding" : overallScore >= 85 ? "Excellent" : overallScore >= 75 ? "Good" : overallScore >= 60 ? "Needs Polish" : "Needs Urgent Attention");
-  const percentileText = reportData?.percentile_text || `Better than ${Math.min(95, Math.max(35, overallScore - 4))}% of candidate resumes`;
+  const grade = reportData?.grade || (overallScore >= 90 ? "Strong" : overallScore >= 75 ? "Competitive" : overallScore >= 60 ? "Moderate" : "Needs revision");
+  const percentileText = reportData?.percentile_text || `Ranked top ${Math.max(5, 100 - overallScore)}% of analyzed engineering resumes`;
 
   const strengths = result?.strengths || [];
   const weaknesses = result?.weaknesses || [];
   const missingKeywords = result?.missing_keywords || [];
   const missingSkills = result?.missing_skills || [];
   const improvedSummary = result?.improved_summary || '';
-  const actionVerbs = result?.action_verb_suggestions || ['Engineered', 'Spearheaded', 'Architected', 'Optimized', 'Automated'];
+  const actionVerbs = result?.action_verb_suggestions || ['Engineered', 'Architected', 'Spearheaded', 'Optimized', 'Automated'];
   const formattingScore = result?.formatting_score ?? reportData?.formatting_score ?? atsParseRate ?? 0;
   const keywordsScore = result?.keywords_score ?? reportData?.keywords_score ?? 0;
   const experienceScore = result?.experience_score ?? reportData?.experience_score ?? recruiterReview ?? 0;
@@ -217,27 +207,26 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
   const projectsScore = result?.projects_score ?? reportData?.projects_score ?? 0;
 
   return (
-    <div className="p-6 sm:p-10 max-w-7xl mx-auto space-y-8 font-sans">
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       
-      {/* ========================================================
-          INITIAL UPLOAD STATE (Clean, Breathable, Enhancv Style)
-         ======================================================== */}
+      {/* Upload State */}
       {!result ? (
-        <div className="max-w-3xl mx-auto space-y-8 py-6">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-400">
-              <ShieldCheck className="w-3.5 h-3.5" /> AI ATS & Recruiter Analysis
+        <div className="max-w-2xl mx-auto space-y-6 py-8">
+          <div className="space-y-2 text-center">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>ATS & Recruiter Engine</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-              Is your resume <span className="text-emerald-400">ready to apply?</span>
+            <h1 className="text-2xl font-semibold text-white tracking-tight">
+              Resume evaluation
             </h1>
-            <p className="text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-              Upload your resume for an instant two-tier evaluation of your ATS machine read rate and recruiter content quality.
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Upload your resume for a structural audit covering ATS parsing, keyword coverage, and bullet impact.
             </p>
           </div>
 
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 sm:p-12 shadow-2xl relative space-y-6">
-            <div className="border-2 border-dashed border-slate-700 hover:border-emerald-500/60 rounded-2xl p-8 sm:p-12 text-center transition-all bg-slate-950/40 relative group cursor-pointer">
+          <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-6 sm:p-8 space-y-5">
+            <div className="border border-dashed border-white/[0.12] hover:border-emerald-500/40 rounded-lg p-8 text-center transition-colors bg-[#141415] relative group cursor-pointer">
               <input
                 id="analyzer-resume-file-input"
                 type="file"
@@ -246,62 +235,69 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
 
-              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Upload className="w-8 h-8" />
+              <div className="w-10 h-10 rounded-lg bg-[#232325] border border-white/[0.08] text-slate-300 mx-auto flex items-center justify-center mb-3">
+                <Upload className="w-4 h-4" />
               </div>
 
               {file ? (
                 <div className="space-y-1">
-                  <p className="text-base font-bold text-emerald-400">{file.name}</p>
-                  <p className="text-xs text-slate-400">Click below to start your audit</p>
+                  <p className="text-xs font-medium text-emerald-400 font-mono">{file.name}</p>
+                  <p className="text-[11px] text-slate-500">Ready to audit</p>
                 </div>
               ) : (
                 <div className="space-y-1">
-                  <p className="text-sm sm:text-base font-bold text-white">
-                    Drop your resume here, or <span className="text-emerald-400 underline underline-offset-4">browse file</span>
+                  <p className="text-xs font-medium text-slate-200">
+                    Drop resume file here, or <span className="text-emerald-400 hover:underline">browse</span>
                   </p>
-                  <p className="text-xs text-slate-400">Supports PDF & DOCX up to 10MB</p>
+                  <p className="text-[11px] text-slate-500 font-mono">PDF, DOCX up to 10MB</p>
                 </div>
               )}
             </div>
 
             {showTextInput && (
-              <div className="space-y-2 pt-2">
-                <label className="block text-xs font-semibold text-slate-300 uppercase">Or Paste Plain Resume Text</label>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-slate-400">Plain text resume</label>
                 <textarea
-                  rows={5}
+                  rows={6}
                   value={rawText}
                   onChange={(e) => setRawText(e.target.value)}
-                  placeholder="Paste your professional summary, experience bullets, and skills..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                  placeholder="Paste experience, skills, and projects..."
+                  className="w-full bg-[#141415] border border-white/[0.08] rounded-lg p-3 text-xs text-slate-200 font-mono placeholder:text-slate-600 focus:outline-none focus:border-white/20"
                 />
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setShowTextInput(!showTextInput)}
-                className="text-xs text-slate-400 hover:text-emerald-400 transition-colors"
+                className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
               >
-                {showTextInput ? 'Hide text paste' : 'Paste resume text instead'}
+                {showTextInput ? 'Hide text input' : 'Paste text instead'}
               </button>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleSampleAnalyze}
+                  disabled={loading}
+                  className="flex-1 sm:flex-initial px-3 py-2 rounded-lg bg-[#232325] hover:bg-[#2c2c30] text-xs font-medium text-slate-300 border border-white/[0.08] transition-colors"
+                >
+                  Load sample
+                </button>
                 <button
                   type="button"
                   onClick={handleAnalyze}
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                  className="flex-1 sm:flex-initial px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-graphite-950 text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
                 >
                   {loading ? (
                     <>
-                      <RefreshCw className="w-4 h-4 animate-spin" /> Analyzing Resume...
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Analyzing...</span>
                     </>
                   ) : (
-                    <>
-                      <Sparkles className="w-4 h-4" /> Run Resume Audit
-                    </>
+                    <span>Analyze resume</span>
                   )}
                 </button>
               </div>
@@ -310,113 +306,108 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
         </div>
       ) : (
 
-        /* ========================================================
-            REPORT VIEW (Spacious Enhancv Split-Screen Layout)
-           ======================================================== */
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+        /* Report View */
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           
           {/* Top Score Summary Banner */}
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl space-y-6">
-            
-            {/* Banner Top Row: Percentile Badge & Action */}
-            <div className="flex items-center justify-between gap-4 flex-wrap pb-4 border-b border-slate-800/60">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
-                <Award className="w-3.5 h-3.5" /> {percentileText}
+          <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 sm:p-6 space-y-4">
+            <div className="flex items-center justify-between gap-4 flex-wrap pb-3 border-b border-white/[0.06]">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#232325] border border-white/[0.08] text-xs text-slate-300 font-mono">
+                <Award className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{percentileText}</span>
               </div>
 
               <button
                 onClick={() => { setResult(null); setAtsResume(''); }}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 border border-slate-700/60 hover:border-slate-600 shadow-sm"
+                className="px-3 py-1.5 rounded-lg bg-[#232325] hover:bg-[#2c2c30] text-xs font-medium text-slate-300 border border-white/[0.08] transition-colors flex items-center gap-1.5"
               >
-                <RefreshCw className="w-3.5 h-3.5" /> Upload Another
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Upload another</span>
               </button>
             </div>
 
-            {/* Score Ring & Gauges Content */}
-            <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
-              {/* Score Ring */}
-              <div className="flex items-center gap-5 sm:gap-6">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-slate-950 border-4 border-emerald-500 flex flex-col items-center justify-center shadow-xl shadow-emerald-500/10 shrink-0">
-                  <span className="text-3xl font-black text-white">{overallScore}</span>
-                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">OUT OF 100</span>
-                  <div className="absolute -bottom-2.5 px-3 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-black text-[10px] uppercase">
-                    {grade}
-                  </div>
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div className="flex items-center gap-5">
+                <div className="w-20 h-20 rounded-xl bg-[#141415] border border-white/[0.08] flex flex-col items-center justify-center shrink-0">
+                  <span className="text-2xl font-semibold text-white font-mono tabular-nums">{overallScore}</span>
+                  <span className="text-[10px] text-slate-500 font-mono">/ 100</span>
                 </div>
 
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-extrabold text-white">Resume Audit Scorecard</h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-medium text-white">Resume score</h2>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      {grade}
+                    </span>
+                  </div>
                   <p className="text-xs text-slate-400 max-w-md">
-                    Evaluated across key ATS parsing algorithms, keyword density, and recruiter impact.
+                    Evaluated across parsing compatibility, keyword density, and recruiter scan rate.
                   </p>
                 </div>
               </div>
 
               {/* Two-Tier Summary Gauges */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full xl:w-auto shrink-0">
-                <div className="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl w-full sm:w-48 space-y-1.5">
+              <div className="grid grid-cols-2 gap-3 w-full lg:w-auto shrink-0">
+                <div className="bg-[#141415] border border-white/[0.08] p-3 rounded-lg w-full sm:w-40 space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">ATS Parse Rate</span>
-                    <span className="font-extrabold text-blue-400">{atsParseRate}%</span>
+                    <span className="text-slate-400">ATS parsing</span>
+                    <span className="font-mono text-emerald-400 tabular-nums">{atsParseRate}%</span>
                   </div>
-                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-blue-500 h-full rounded-full" style={{ width: `${atsParseRate}%` }}></div>
+                  <div className="w-full bg-[#232325] h-1 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${atsParseRate}%` }}></div>
                   </div>
-                  <p className="text-[10px] text-slate-400 pt-0.5">Machine readability</p>
+                  <p className="text-[10px] text-slate-500">Machine read rate</p>
                 </div>
 
-                <div className="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl w-full sm:w-48 space-y-1.5">
+                <div className="bg-[#141415] border border-white/[0.08] p-3 rounded-lg w-full sm:w-40 space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">Recruiter Review</span>
-                    <span className="font-extrabold text-emerald-400">{recruiterReview}%</span>
+                    <span className="text-slate-400">Recruiter review</span>
+                    <span className="font-mono text-white tabular-nums">{recruiterReview}%</span>
                   </div>
-                  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${recruiterReview}%` }}></div>
+                  <div className="w-full bg-[#232325] h-1 rounded-full overflow-hidden">
+                    <div className="bg-white h-full rounded-full" style={{ width: `${recruiterReview}%` }}></div>
                   </div>
-                  <p className="text-[10px] text-slate-400 pt-0.5">Content & metrics impact</p>
+                  <p className="text-[10px] text-slate-500">Content and metrics</p>
                 </div>
               </div>
             </div>
-
           </div>
 
-          {/* ========================================================
-              SPLIT SCREEN: 60% ATS REPORT / 40% LIVE RESUME PREVIEW
-             ======================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Split Screen Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* LEFT COLUMN: Clean ATS Intelligence Report (7 Cols) */}
-            <div className="lg:col-span-7 space-y-6">
+            {/* Left Column: Report Details */}
+            <div className="lg:col-span-7 space-y-5">
               
-              {/* Core ATS Pillars Breakdown */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
+              {/* ATS Pillars Breakdown */}
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
                   <div className="flex items-center gap-2">
                     <Sliders className="w-4 h-4 text-emerald-400" />
-                    <h3 className="text-sm font-bold text-white">ATS Scoring Pillars</h3>
+                    <h3 className="text-xs font-medium text-white uppercase tracking-wider">Evaluation pillars</h3>
                   </div>
-                  <span className="text-[11px] font-semibold text-slate-400">Industry-Standard Multi-Factor Model</span>
+                  <span className="text-[11px] font-mono text-slate-500">6 categories</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {[
                     { label: "Formatting & Layout", score: formattingScore, desc: "Headers & parsability" },
                     { label: "Keywords & Terms", score: keywordsScore, desc: "Tech domain matches" },
-                    { label: "Experience Impact", score: experienceScore, desc: "Metrics & action verbs" },
+                    { label: "Experience Impact", score: experienceScore, desc: "Action verbs & metrics" },
                     { label: "Skills Alignment", score: skillsScore, desc: "Hard & soft competencies" },
-                    { label: "Education & Academics", score: educationScore, desc: "Degrees & institutions" },
-                    { label: "Projects & Portfolio", score: projectsScore, desc: "Real-world systems" },
+                    { label: "Academics", score: educationScore, desc: "Degrees & institutions" },
+                    { label: "Projects", score: projectsScore, desc: "Real-world systems" },
                   ].map((pillar, idx) => (
-                    <div key={idx} className="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-2xl space-y-2">
+                    <div key={idx} className="bg-[#141415] border border-white/[0.08] p-3 rounded-lg space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-semibold text-xs truncate">{pillar.label}</span>
-                        <span className={`font-black text-xs ${pillar.score >= 85 ? 'text-emerald-400' : pillar.score >= 70 ? 'text-blue-400' : 'text-amber-400'}`}>
+                        <span className="text-slate-300 truncate">{pillar.label}</span>
+                        <span className="font-mono text-xs tabular-nums text-white">
                           {pillar.score}%
                         </span>
                       </div>
-                      <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-[#232325] h-1 rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full transition-all duration-500 ${pillar.score >= 85 ? 'bg-emerald-500' : pillar.score >= 70 ? 'bg-blue-500' : 'bg-amber-500'}`}
+                          className="h-full rounded-full bg-emerald-500"
                           style={{ width: `${pillar.score}%` }}
                         />
                       </div>
@@ -426,129 +417,122 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
                 </div>
               </div>
 
-              {/* Strengths & Weaknesses Cards */}
+              {/* Strengths & Weaknesses */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Strengths Card */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-emerald-400">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400">Key Strengths</h4>
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-mono">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Key strengths</span>
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-1.5 text-xs text-slate-300">
                     {strengths && strengths.length > 0 ? (
                       strengths.map((str, idx) => (
-                        <li key={idx} className="text-xs text-slate-300 flex items-start gap-2 leading-relaxed">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                        <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                          <span className="text-emerald-400">·</span>
                           <span>{str}</span>
                         </li>
                       ))
                     ) : (
-                      <li className="text-xs text-slate-400 italic">Well-structured linear layout and readable typography.</li>
+                      <li className="text-slate-500 italic">Clear structure and readable hierarchy.</li>
                     )}
                   </ul>
                 </div>
 
-                {/* Areas for Improvement */}
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-amber-400">
-                    <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400">Areas for Improvement</h4>
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-1.5 text-amber-400 text-xs font-mono">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    <span>Areas to improve</span>
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-1.5 text-xs text-slate-300">
                     {weaknesses && weaknesses.length > 0 ? (
                       weaknesses.map((weak, idx) => (
-                        <li key={idx} className="text-xs text-slate-300 flex items-start gap-2 leading-relaxed">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                        <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                          <span className="text-amber-400">·</span>
                           <span>{weak}</span>
                         </li>
                       ))
                     ) : (
-                      <li className="text-xs text-slate-400 italic">Add more quantifiable metrics (%, $) to your experience bullets.</li>
+                      <li className="text-slate-500 italic">Add quantifiable metrics to experience bullets.</li>
                     )}
                   </ul>
                 </div>
               </div>
 
-              {/* Recommended Keywords & Missing Skills */}
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 space-y-3">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-blue-400" />
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">Recommended Keywords & Skills</h4>
-                  </div>
+              {/* Missing Skills & Keywords */}
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-3">
+                <div className="space-y-0.5">
+                  <h4 className="text-xs font-medium text-white uppercase tracking-wider">Recommended keywords</h4>
                   <p className="text-xs text-slate-400">
-                    Integrating these keywords into your skills and work experience will boost your ATS match rate.
+                    Integrating these terms into your skills and experience will improve match confidence.
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-1">
+                <div className="flex flex-wrap gap-1.5 pt-1">
                   {[...missingKeywords, ...missingSkills].map((kw, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-medium flex items-center gap-1.5"
+                      className="px-2 py-0.5 rounded-md bg-[#232325] border border-white/[0.08] text-slate-300 text-xs font-mono"
                     >
-                      <span className="text-blue-400 font-bold">+</span> {kw}
+                      +{kw}
                     </span>
                   ))}
                   {missingKeywords.length === 0 && missingSkills.length === 0 && (
-                    <span className="text-xs text-emerald-400 font-medium">All major domain keywords detected!</span>
+                    <span className="text-xs text-emerald-400 font-mono">All core domain keywords detected.</span>
                   )}
                 </div>
               </div>
 
               {/* AI Improved Summary */}
               {improvedSummary && (
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 space-y-3">
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                      <Zap className="w-3.5 h-3.5" /> AI-Optimized Professional Summary
+                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Optimized summary suggestion</span>
                     </span>
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(improvedSummary);
-                        addToast('Summary copied to clipboard!', 'success');
+                        addToast('Summary copied.', 'success');
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-semibold text-slate-300 flex items-center gap-1 transition-colors"
+                      className="px-2 py-1 rounded bg-[#232325] hover:bg-[#2c2c30] text-[11px] font-mono text-slate-300 flex items-center gap-1 transition-colors border border-white/[0.08]"
                     >
                       <Copy className="w-3 h-3" /> Copy
                     </button>
                   </div>
-                  <p className="text-xs text-slate-200 leading-relaxed bg-slate-950/70 p-4 rounded-xl border border-slate-800">
+                  <p className="text-xs text-slate-300 leading-relaxed bg-[#141415] p-3.5 rounded-lg border border-white/[0.08]">
                     {improvedSummary}
                   </p>
                 </div>
               )}
 
-              {/* CAR FORMULA BEFORE & AFTER SECTION */}
+              {/* CAR Formula Rewrites */}
               {bulletTransformations.length > 0 && (
-                <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 space-y-4">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
-                      <Zap className="w-3 h-3 text-emerald-400" /> CAR Formula Rewrites
-                    </span>
-                    <h3 className="text-base font-bold text-white">Before vs After Bullet Point Transformation</h3>
-                    <p className="text-xs text-slate-400">Convert passive job duties into quantifiable achievement bullets.</p>
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-4">
+                  <div className="space-y-0.5">
+                    <h3 className="text-xs font-medium text-white uppercase tracking-wider">Before & after bullet rewrites</h3>
+                    <p className="text-xs text-slate-400">Context-Action-Result format with quantifiable outputs.</p>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {bulletTransformations.map((trans, idx) => (
-                      <div key={idx} className="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-4 space-y-3">
+                      <div key={idx} className="bg-[#141415] border border-white/[0.08] rounded-lg p-3.5 space-y-2.5">
                         <div className="space-y-1">
-                          <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">Before (Passive)</span>
-                          <p className="text-xs text-slate-400 italic">"{trans.original}"</p>
+                          <span className="text-[10px] font-mono text-slate-500 uppercase">Original</span>
+                          <p className="text-xs text-slate-400">"{trans.original}"</p>
                         </div>
 
-                        <div className="space-y-1 bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-xl">
+                        <div className="space-y-1 bg-[#19191b] border border-white/[0.08] p-3 rounded-md">
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">After (CAR Result)</span>
+                            <span className="text-[10px] font-mono text-emerald-400 uppercase">Quantified</span>
                             <button
                               onClick={() => handleCopyBullet(trans.improved, idx)}
-                              className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
+                              className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#232325] text-slate-300 hover:text-white border border-white/[0.08]"
                             >
-                              {copiedBulletIdx === idx ? 'Copied!' : 'Copy'}
+                              {copiedBulletIdx === idx ? 'Copied' : 'Copy'}
                             </button>
                           </div>
-                          <p className="text-xs text-white font-medium">"{trans.improved}"</p>
+                          <p className="text-xs text-slate-200">"{trans.improved}"</p>
                         </div>
                       </div>
                     ))}
@@ -556,17 +540,17 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
                 </div>
               )}
 
-              {/* High Impact Action Verbs */}
+              {/* Action Verbs */}
               {actionVerbs && actionVerbs.length > 0 && (
-                <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 space-y-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    High-Impact Action Verbs To Use
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-2">
+                  <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    Recommended action verbs
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {actionVerbs.map((verb, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 rounded-xl bg-slate-800/90 border border-slate-700/60 text-slate-200 text-xs font-semibold"
+                        className="px-2 py-0.5 rounded-md bg-[#232325] border border-white/[0.08] text-slate-300 text-xs font-mono"
                       >
                         {verb}
                       </span>
@@ -577,66 +561,64 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
 
             </div>
 
-            {/* RIGHT COLUMN: Live Resume Preview Sheet & 1-Click Fix (5 Cols) */}
-            <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+            {/* Right Column: Live Document Preview */}
+            <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-20">
               
-              {/* 1-Click Generator Action Card */}
-              <div className="bg-gradient-to-br from-emerald-950/30 via-slate-900 to-teal-950/30 border border-emerald-500/40 rounded-3xl p-6 space-y-4 shadow-xl shadow-emerald-500/5">
+              {/* Generate Optimized Card */}
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-3">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
-                    <Wand2 className="w-3.5 h-3.5" /> 1-Click Optimization
-                  </span>
-                  <h3 className="text-lg font-black text-white">Optimize Resume Automatically</h3>
-                  <p className="text-xs text-slate-300">
-                    Generate an ATS-certified version applying all CAR bullet metrics, missing keywords, and clean headings.
+                  <h3 className="text-sm font-medium text-white">Generate optimized version</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Builds an ATS-compliant resume applying all CAR metrics, missing keywords, and standard headings.
                   </p>
                 </div>
 
                 <button
                   onClick={handleGenerateFullATSResume}
                   disabled={generatingResume}
-                  className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-graphite-950 font-medium text-xs transition-colors flex items-center justify-center gap-2"
                 >
-                  <Sparkles className={`w-3.5 h-3.5 ${generatingResume ? 'animate-spin' : ''}`} />
-                  {generatingResume ? 'Building Optimized Resume...' : 'Generate 100% ATS Resume'}
+                  <RefreshCw className={`w-3.5 h-3.5 ${generatingResume ? 'animate-spin' : ''}`} />
+                  <span>{generatingResume ? 'Generating...' : 'Generate ATS version'}</span>
                 </button>
               </div>
 
-              {/* Live Paper Document Viewer Card */}
-              <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 space-y-4">
+              {/* Document Sheet */}
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <FileText className="w-3.5 h-3.5 text-blue-400" /> {atsResume ? '100% ATS Optimized Resume' : 'Parsed Resume Document'}
+                  <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{atsResume ? 'Optimized output' : 'Parsed text'}</span>
                   </span>
                   
                   {atsResume && (
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleCopyResume}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] font-semibold text-slate-300 hover:text-white"
+                        className="px-2 py-1 rounded-md bg-[#232325] text-[11px] font-mono text-slate-300 hover:text-white border border-white/[0.08]"
                       >
-                        {copied ? 'Copied!' : 'Copy'}
+                        {copied ? 'Copied' : 'Copy'}
                       </button>
                       <button
                         onClick={handleDownloadPDF}
-                        className="px-3 py-1 rounded-lg bg-emerald-500 text-[11px] font-bold text-slate-950 flex items-center gap-1"
+                        className="px-2.5 py-1 rounded-md bg-emerald-500 text-[11px] font-medium text-graphite-950 flex items-center gap-1"
                       >
-                        <Download className="w-3 h-3" /> PDF
+                        <Download className="w-3 h-3" />
+                        <span>PDF</span>
                       </button>
                     </div>
                   )}
                 </div>
 
-                {/* White Realistic Paper Sheet */}
                 <div
                   id="ats-resume-rendered-document"
-                  className="bg-white text-slate-900 p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200 text-left font-sans max-h-[600px] overflow-y-auto leading-relaxed select-text text-xs"
+                  className="bg-white text-slate-900 p-6 rounded-lg border border-slate-200 text-left font-sans max-h-[550px] overflow-y-auto leading-relaxed select-text text-xs"
                 >
                   {atsResume ? (
                     <div dangerouslySetInnerHTML={{ __html: parseMarkdownToHTML(atsResume) }} />
                   ) : (
                     <pre className="whitespace-pre-wrap font-sans text-xs text-slate-800 leading-relaxed">
-                      {rawText || "No raw text available. Please upload a file or paste text to see live preview."}
+                      {rawText || "No text available. Upload a file or paste text to preview."}
                     </pre>
                   )}
                 </div>
@@ -644,9 +626,10 @@ Databases: PostgreSQL, Redis, MongoDB, SQLite`;
                 {atsResume && (
                   <button
                     onClick={() => navigate('/resume-builder')}
-                    className="w-full py-2.5 rounded-xl bg-blue-600/10 border border-blue-500/30 text-blue-300 hover:bg-blue-600/20 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                    className="w-full py-2 rounded-lg bg-[#232325] hover:bg-[#2c2c30] text-slate-300 text-xs font-medium border border-white/[0.08] flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    <FileEdit className="w-3.5 h-3.5" /> Customize in Interactive Resume Builder
+                    <FileEdit className="w-3.5 h-3.5" />
+                    <span>Edit in builder</span>
                   </button>
                 )}
               </div>

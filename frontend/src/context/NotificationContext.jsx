@@ -12,7 +12,7 @@ export const NotificationProvider = ({ children }) => {
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       removeToast(id);
-    }, 4000);
+    }, 3500);
   };
 
   const removeToast = (id) => {
@@ -22,28 +22,23 @@ export const NotificationProvider = ({ children }) => {
   return (
     <NotificationContext.Provider value={{ addToast }}>
       {children}
-      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              className={`pointer-events-auto flex items-center gap-3 p-4 rounded-xl shadow-xl backdrop-blur-md border ${
-                toast.type === 'success'
-                  ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-200'
-                  : toast.type === 'error'
-                  ? 'bg-rose-950/80 border-rose-500/40 text-rose-200'
-                  : 'bg-slate-900/90 border-blue-500/40 text-blue-200'
-              }`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.15 }}
+              className="pointer-events-auto flex items-center gap-2.5 p-3 rounded-lg bg-[#19191b] border border-white/[0.08] shadow-lg text-xs text-white"
             >
-              {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />}
-              {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />}
-              {toast.type === 'info' && <Info className="w-5 h-5 text-blue-400 shrink-0" />}
-              <span className="text-sm font-medium flex-1">{toast.message}</span>
-              <button onClick={() => removeToast(toast.id)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
+              {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
+              {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />}
+              {toast.type === 'info' && <Info className="w-4 h-4 text-slate-400 shrink-0" />}
+              <span className="font-normal text-slate-200 flex-1 leading-snug">{toast.message}</span>
+              <button onClick={() => removeToast(toast.id)} className="text-slate-500 hover:text-white transition-colors">
+                <X className="w-3.5 h-3.5" />
               </button>
             </motion.div>
           ))}

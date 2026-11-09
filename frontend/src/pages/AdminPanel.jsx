@@ -3,33 +3,13 @@ import { useSearchParams } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
 import api from '../services/api';
 import {
-  ShieldCheck,
-  Users,
-  FileText,
-  Mic,
-  Code2,
-  Trash2,
-  Activity,
-  Search,
-  CheckCircle2,
-  Server,
-  Database,
-  Cpu,
-  RefreshCw,
-  Sliders,
-  AlertCircle
+  ShieldCheck, Users, FileText, Mic, Code2, Trash2, Search,
+  CheckCircle2, Server, Database, Cpu, RefreshCw
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area
 } from 'recharts';
 
 export default function AdminPanel() {
@@ -57,28 +37,23 @@ export default function AdminPanel() {
       const resUsers = await api.get('/admin/users');
       setUsers(resUsers.data);
     } catch (err) {
-      addToast('Failed to load admin panel statistics', 'error');
+      addToast('Failed to load administration metrics.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteUser = async (userId) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    if (!window.confirm(`Confirm deletion of User ID #${userId}?`)) return;
     try {
       await api.delete(`/admin/users/${userId}`);
-      addToast('User deleted successfully', 'success');
-      fetchAdminData();
+      setUsers(users.filter((u) => u.id !== userId));
+      addToast(`User #${userId} deleted.`, 'success');
     } catch (err) {
-      addToast('Failed to delete user', 'error');
+      addToast('Failed to delete user.', 'error');
     }
   };
 
-  const setTab = (tabName) => {
-    setSearchParams({ tab: tabName });
-  };
-
-  // Filtered Users
   const filteredUsers = users.filter((u) => {
     const matchesSearch =
       u.name.toLowerCase().includes(userSearch.toLowerCase()) ||
@@ -90,7 +65,6 @@ export default function AdminPanel() {
     return matchesSearch;
   });
 
-  // Filtered Logs
   const filteredLogs = (stats?.system_logs || []).filter((log) => {
     const matchesSev = logFilter === 'ALL' || log.level.toUpperCase() === logFilter;
     const matchesSearch =
@@ -99,7 +73,6 @@ export default function AdminPanel() {
     return matchesSev && matchesSearch;
   });
 
-  // Analytics Sample Chart Data
   const usageChartData = [
     { name: 'Mon', Resumes: 12, Interviews: 8, Coding: 15 },
     { name: 'Tue', Resumes: 19, Interviews: 14, Coding: 22 },
@@ -121,170 +94,178 @@ export default function AdminPanel() {
   ];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-xs font-semibold text-rose-400">
-            <ShieldCheck className="w-3.5 h-3.5" /> System Administration Portal
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Platform Administration</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white">Platform Administration Panel</h1>
-          <p className="text-sm text-slate-400 max-w-2xl">
-            Real-time user directory governance, database audit logging, system performance analytics, and security controls.
+          <h1 className="text-2xl font-semibold text-white tracking-tight">System control panel</h1>
+          <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+            User directory governance, database audit logging, and service health monitoring.
           </p>
         </div>
 
         <button
           onClick={fetchAdminData}
           disabled={loading}
-          className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-2 self-start md:self-auto shrink-0"
+          className="px-3.5 py-2 rounded-lg bg-[#232325] hover:bg-[#2c2c30] text-xs font-medium text-slate-300 border border-white/[0.08] flex items-center gap-2 self-start md:self-auto shrink-0 transition-colors"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh Admin Metrics
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <span>Refresh metrics</span>
         </button>
       </div>
 
-
+      {/* Tabs */}
+      <div className="flex items-center gap-1 border-b border-white/[0.08] pb-1 overflow-x-auto text-xs font-medium">
+        {[
+          { id: 'overview', label: 'Overview' },
+          { id: 'users', label: 'User Directory' },
+          { id: 'analytics', label: 'Service Metrics' },
+          { id: 'logs', label: 'Audit Logs' }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setSearchParams({ tab: tab.id })}
+            className={`px-3 py-1.5 rounded-md transition-colors ${
+              activeTab === tab.id
+                ? 'bg-[#232325] text-white border border-white/[0.08]'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       {loading ? (
-        <div className="glass-card p-12 text-center text-slate-400 flex items-center justify-center gap-3">
-          <span className="w-5 h-5 rounded-full border-2 border-rose-500 border-t-transparent animate-spin"></span>
-          Loading System Diagnostics & Audit Metrics...
+        <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-12 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
+          <span className="w-4 h-4 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></span>
+          <span>Loading system diagnostics...</span>
         </div>
       ) : (
-        <div className="space-y-8">
-          {/* TAB 1: OVERVIEW CONTROL CENTER */}
+        <div className="space-y-6">
+          {/* TAB 1: OVERVIEW */}
           {activeTab === 'overview' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-              {/* Top Admin Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <div className="glass-card p-5 border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-slate-400 text-xs uppercase font-semibold">
-                    <span>Registered Users</span>
-                    <Users className="w-4 h-4 text-blue-400" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-1.5">
+                  <div className="flex items-center justify-between text-slate-400 text-xs">
+                    <span className="font-mono text-[11px] uppercase">Registered users</span>
+                    <Users className="w-3.5 h-3.5 text-slate-400" />
                   </div>
-                  <div className="text-3xl font-extrabold text-white">{stats?.total_users || 0}</div>
-                  <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Active User Database
-                  </span>
+                  <div className="text-2xl font-mono font-semibold text-white tabular-nums">{stats?.total_users || 0}</div>
+                  <span className="text-[10px] text-slate-500">Active accounts</span>
                 </div>
 
-                <div className="glass-card p-5 border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-slate-400 text-xs uppercase font-semibold">
-                    <span>Resumes Analyzed</span>
-                    <FileText className="w-4 h-4 text-emerald-400" />
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-1.5">
+                  <div className="flex items-center justify-between text-slate-400 text-xs">
+                    <span className="font-mono text-[11px] uppercase">Resumes analyzed</span>
+                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
                   </div>
-                  <div className="text-3xl font-extrabold text-white">{stats?.total_resumes_analyzed || 0}</div>
-                  <span className="text-[11px] text-blue-400 font-semibold">ATS Parsing Engine Active</span>
+                  <div className="text-2xl font-mono font-semibold text-white tabular-nums">{stats?.total_resumes_analyzed || 0}</div>
+                  <span className="text-[10px] text-slate-500">ATS parsing jobs</span>
                 </div>
 
-                <div className="glass-card p-5 border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-slate-400 text-xs uppercase font-semibold">
-                    <span>Interviews Conducted</span>
-                    <Mic className="w-4 h-4 text-purple-400" />
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-1.5">
+                  <div className="flex items-center justify-between text-slate-400 text-xs">
+                    <span className="font-mono text-[11px] uppercase">Interviews conducted</span>
+                    <Mic className="w-3.5 h-3.5 text-slate-400" />
                   </div>
-                  <div className="text-3xl font-extrabold text-white">{stats?.total_interviews_conducted || 0}</div>
-                  <span className="text-[11px] text-purple-400 font-semibold">AI Voice/Text Sessions</span>
+                  <div className="text-2xl font-mono font-semibold text-white tabular-nums">{stats?.total_interviews_conducted || 0}</div>
+                  <span className="text-[10px] text-slate-500">Mock sessions completed</span>
                 </div>
 
-                <div className="glass-card p-5 border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-slate-400 text-xs uppercase font-semibold">
-                    <span>Coding Tests</span>
-                    <Code2 className="w-4 h-4 text-amber-400" />
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-4 space-y-1.5">
+                  <div className="flex items-center justify-between text-slate-400 text-xs">
+                    <span className="font-mono text-[11px] uppercase">Coding tests</span>
+                    <Code2 className="w-3.5 h-3.5 text-slate-400" />
                   </div>
-                  <div className="text-3xl font-extrabold text-white">{stats?.total_coding_tests || 0}</div>
-                  <span className="text-[11px] text-amber-400 font-semibold">Py/JS Sandbox Evaluations</span>
+                  <div className="text-2xl font-mono font-semibold text-white tabular-nums">{stats?.total_coding_tests || 0}</div>
+                  <span className="text-[10px] text-slate-500">Sandbox submissions</span>
                 </div>
               </div>
 
-              {/* System Health Diagnostics */}
-              <div className="glass-card p-6 border border-slate-800 space-y-4">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Server className="w-4 h-4 text-rose-400" /> Infrastructure & Service Health Monitor
+              {/* Service Health */}
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-3">
+                <h3 className="text-xs font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                  <Server className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Infrastructure status</span>
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                  <div className="p-3 rounded-lg bg-[#141415] border border-white/[0.08] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-300">FastAPI REST Server</span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      <span className="font-medium text-slate-300">FastAPI backend</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </div>
-                    <p className="text-xs text-slate-400">Port 8000 • 100% Uptime</p>
+                    <p className="text-[11px] text-slate-500 font-mono">Port 8000 · operational</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                  <div className="p-3 rounded-lg bg-[#141415] border border-white/[0.08] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-300">Google Gemini LLM</span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      <span className="font-medium text-slate-300">Google Gemini API</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </div>
-                    <p className="text-xs text-slate-400">API Key Verified • Ready</p>
+                    <p className="text-[11px] text-slate-500 font-mono">Verified · operational</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                  <div className="p-3 rounded-lg bg-[#141415] border border-white/[0.08] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-300">SQLite Database</span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                      <span className="font-medium text-slate-300">SQLite database</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </div>
-                    <p className="text-xs text-slate-400">14.2 MB • Healthy</p>
+                    <p className="text-[11px] text-slate-500 font-mono">Local · healthy</p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                  <div className="p-3 rounded-lg bg-[#141415] border border-white/[0.08] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-300">Security Sandbox</span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                      <span className="font-medium text-slate-300">Auth & RBAC guard</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </div>
-                    <p className="text-xs text-slate-400">JWT RBAC Guard Active</p>
+                    <p className="text-[11px] text-slate-500 font-mono">JWT security active</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           )}
 
-          {/* TAB 2: USER DIRECTORY & ROLES */}
+          {/* TAB 2: USER DIRECTORY */}
           {activeTab === 'users' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-              <div className="glass-card p-6 border border-slate-800 space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Users className="w-4 h-4 text-blue-400" /> User Directory ({filteredUsers.length} Users Found)
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <h3 className="text-xs font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                    <Users className="w-3.5 h-3.5 text-slate-400" />
+                    <span>User directory ({filteredUsers.length})</span>
                   </h3>
 
-                  {/* Search & Role Filter */}
-                  <div className="flex flex-col sm:flex-row items-center gap-3">
-                    <div className="relative w-full sm:w-64">
-                      <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+                  <div className="flex flex-col sm:flex-row items-center gap-2">
+                    <div className="relative w-full sm:w-56">
+                      <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
                       <input
                         type="text"
                         value={userSearch}
                         onChange={(e) => setUserSearch(e.target.value)}
-                        placeholder="Search by name or email..."
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-blue-500"
+                        placeholder="Search users..."
+                        className="w-full bg-[#141415] border border-white/[0.08] rounded-lg py-1.5 pl-8 pr-3 text-xs text-white placeholder:text-slate-600 focus:outline-none"
                       />
                     </div>
 
-                    <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 shrink-0">
-                      <button
-                        onClick={() => setRoleFilter('ALL')}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
-                          roleFilter === 'ALL' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        All
-                      </button>
-                      <button
-                        onClick={() => setRoleFilter('ADMIN')}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
-                          roleFilter === 'ADMIN' ? 'bg-rose-600 text-white' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        Admins
-                      </button>
-                      <button
-                        onClick={() => setRoleFilter('CANDIDATE')}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
-                          roleFilter === 'CANDIDATE' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        Candidates
-                      </button>
+                    <div className="flex items-center gap-1 bg-[#141415] p-1 rounded-lg border border-white/[0.08]">
+                      {['ALL', 'ADMIN', 'CANDIDATE'].map((rf) => (
+                        <button
+                          key={rf}
+                          onClick={() => setRoleFilter(rf)}
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                            roleFilter === rf ? 'bg-[#232325] text-white' : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {rf}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -292,45 +273,36 @@ export default function AdminPanel() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-slate-800 text-slate-400 uppercase font-semibold">
-                        <th className="p-3">User ID</th>
-                        <th className="p-3">Name</th>
-                        <th className="p-3">Email Address</th>
-                        <th className="p-3">Target Role</th>
-                        <th className="p-3">System Access Role</th>
-                        <th className="p-3 text-right">Actions</th>
+                      <tr className="border-b border-white/[0.06] text-slate-400 font-mono text-[11px] uppercase">
+                        <th className="p-2.5">ID</th>
+                        <th className="p-2.5">Name</th>
+                        <th className="p-2.5">Email</th>
+                        <th className="p-2.5">Role</th>
+                        <th className="p-2.5">Access</th>
+                        <th className="p-2.5 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-white/[0.04]">
                       {filteredUsers.map((u) => {
                         const userIsAdmin = u.is_admin || u.email?.includes('admin');
                         return (
-                          <tr key={u.id} className="hover:bg-slate-900/60 transition-colors">
-                            <td className="p-3 text-slate-400 font-mono">#{u.id}</td>
-                            <td className="p-3 font-semibold text-white flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center font-bold text-[10px] text-white">
-                                {u.name ? u.name[0].toUpperCase() : 'U'}
-                              </div>
-                              <span>{u.name}</span>
+                          <tr key={u.id} className="hover:bg-[#141415] transition-colors">
+                            <td className="p-2.5 text-slate-500 font-mono">#{u.id}</td>
+                            <td className="p-2.5 font-medium text-white">{u.name}</td>
+                            <td className="p-2.5 text-slate-400 font-mono text-[11px]">{u.email}</td>
+                            <td className="p-2.5 text-slate-300">{u.preferred_job_role || 'Software Engineer'}</td>
+                            <td className="p-2.5">
+                              <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono ${
+                                userIsAdmin ? 'bg-[#232325] text-amber-400 border border-amber-500/20' : 'bg-[#141415] text-slate-400 border border-white/[0.08]'
+                              }`}>
+                                {userIsAdmin ? 'Admin' : 'Candidate'}
+                              </span>
                             </td>
-                            <td className="p-3 text-slate-300 font-mono">{u.email}</td>
-                            <td className="p-3 text-blue-400 font-medium">{u.preferred_job_role || 'Software Engineer'}</td>
-                            <td className="p-3">
-                              {userIsAdmin ? (
-                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">
-                                  <ShieldCheck className="w-3 h-3" /> System Admin
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] font-bold">
-                                  Candidate User
-                                </span>
-                              )}
-                            </td>
-                            <td className="p-3 text-right">
+                            <td className="p-2.5 text-right">
                               <button
                                 onClick={() => handleDeleteUser(u.id)}
-                                className="p-1.5 rounded-lg bg-rose-950/60 border border-rose-500/30 text-rose-300 hover:text-white transition-colors"
-                                title="Delete User Account"
+                                className="p-1 rounded text-slate-500 hover:text-white hover:bg-[#232325] transition-colors"
+                                title="Delete user"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -347,41 +319,41 @@ export default function AdminPanel() {
 
           {/* TAB 3: SYSTEM ANALYTICS */}
           {activeTab === 'analytics' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Feature Usage Bar Chart */}
-                <div className="glass-card p-6 border border-slate-800 space-y-4">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-blue-400" /> Platform Weekly Feature Usage
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-3">
+                  <h3 className="text-xs font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                    <Activity className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Weekly feature usage</span>
                   </h3>
-                  <div className="h-64">
+                  <div className="h-60">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={usageChartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                        <XAxis dataKey="name" stroke="#94a3b8" />
-                        <YAxis stroke="#94a3b8" />
-                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px' }} />
-                        <Bar dataKey="Resumes" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="Interviews" fill="#a855f7" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="Coding" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#232325" />
+                        <XAxis dataKey="name" stroke="#6b7280" tick={{ fontSize: 10, fontFamily: 'monospace' }} />
+                        <YAxis stroke="#6b7280" tick={{ fontSize: 10, fontFamily: 'monospace' }} />
+                        <Tooltip contentStyle={{ backgroundColor: '#141415', borderColor: 'rgba(255,255,255,0.08)', borderRadius: '8px', fontSize: '11px', color: '#fff' }} />
+                        <Bar dataKey="Resumes" fill="#10b981" radius={[3, 3, 0, 0]} />
+                        <Bar dataKey="Interviews" fill="#232325" stroke="rgba(255,255,255,0.2)" strokeWidth={1} radius={[3, 3, 0, 0]} />
+                        <Bar dataKey="Coding" fill="#374151" radius={[3, 3, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
-                {/* API Latency Area Chart */}
-                <div className="glass-card p-6 border border-slate-800 space-y-4">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Cpu className="w-4 h-4 text-emerald-400" /> AI API Response Time (ms)
+                <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-3">
+                  <h3 className="text-xs font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                    <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>API response time (ms)</span>
                   </h3>
-                  <div className="h-64">
+                  <div className="h-60">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={latencyChartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                        <XAxis dataKey="time" stroke="#94a3b8" />
-                        <YAxis stroke="#94a3b8" />
-                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px' }} />
-                        <Area type="monotone" dataKey="Latency" stroke="#10b981" fill="#10b98120" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#232325" />
+                        <XAxis dataKey="time" stroke="#6b7280" tick={{ fontSize: 10, fontFamily: 'monospace' }} />
+                        <YAxis stroke="#6b7280" tick={{ fontSize: 10, fontFamily: 'monospace' }} />
+                        <Tooltip contentStyle={{ backgroundColor: '#141415', borderColor: 'rgba(255,255,255,0.08)', borderRadius: '8px', fontSize: '11px', color: '#fff' }} />
+                        <Area type="monotone" dataKey="Latency" stroke="#10b981" fill="#10b98115" strokeWidth={1.5} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -390,40 +362,35 @@ export default function AdminPanel() {
             </motion.div>
           )}
 
-          {/* TAB 4: DATABASE AUDIT LOGS */}
+          {/* TAB 4: AUDIT LOGS */}
           {activeTab === 'logs' && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-              <div className="glass-card p-6 border border-slate-800 space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Database className="w-4 h-4 text-purple-400" /> Database Audit Logs ({filteredLogs.length} Events)
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+              <div className="bg-[#19191b] border border-white/[0.08] rounded-xl p-5 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <h3 className="text-xs font-medium text-white uppercase tracking-wider flex items-center gap-2">
+                    <Database className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Audit logs ({filteredLogs.length})</span>
                   </h3>
 
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-full sm:w-64">
-                      <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-full sm:w-56">
+                      <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
                       <input
                         type="text"
                         value={logSearch}
                         onChange={(e) => setLogSearch(e.target.value)}
                         placeholder="Search logs..."
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pl-9 pr-3 text-xs text-white focus:outline-none focus:border-blue-500"
+                        className="w-full bg-[#141415] border border-white/[0.08] rounded-lg py-1.5 pl-8 pr-3 text-xs text-white placeholder:text-slate-600 focus:outline-none"
                       />
                     </div>
 
-                    <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 shrink-0">
+                    <div className="flex items-center gap-1 bg-[#141415] p-1 rounded-lg border border-white/[0.08]">
                       {['ALL', 'INFO', 'WARN', 'ERROR'].map((lvl) => (
                         <button
                           key={lvl}
                           onClick={() => setLogFilter(lvl)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
-                            logFilter === lvl
-                              ? lvl === 'ERROR'
-                                ? 'bg-rose-600 text-white'
-                                : lvl === 'WARN'
-                                ? 'bg-amber-600 text-white'
-                                : 'bg-blue-600 text-white'
-                              : 'text-slate-400 hover:text-white'
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                            logFilter === lvl ? 'bg-[#232325] text-white' : 'text-slate-400 hover:text-white'
                           }`}
                         >
                           {lvl}
@@ -433,23 +400,23 @@ export default function AdminPanel() {
                   </div>
                 </div>
 
-                <div className="space-y-2 font-mono text-xs">
+                <div className="space-y-1.5 font-mono text-xs">
                   {filteredLogs.length === 0 ? (
-                    <div className="p-8 text-center text-slate-500">No matching audit logs found.</div>
+                    <div className="p-8 text-center text-slate-500 text-xs">No matching audit logs.</div>
                   ) : (
                     filteredLogs.map((log, idx) => (
-                      <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex justify-between items-center text-slate-300">
-                        <div className="flex items-center gap-3">
-                          <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                      <div key={idx} className="p-2.5 rounded-lg bg-[#141415] border border-white/[0.08] flex items-center justify-between text-slate-300">
+                        <div className="flex items-center gap-2.5">
+                          <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono uppercase ${
                             log.level === 'error'
-                              ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                              ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                               : log.level === 'warn'
-                              ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                              : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : 'bg-[#232325] text-slate-300 border border-white/[0.08]'
                           }`}>
                             {log.level}
                           </span>
-                          <span className="font-bold text-white">{log.action}:</span>
+                          <span className="font-semibold text-white">{log.action}:</span>
                           <span className="text-slate-400">{log.details}</span>
                         </div>
                         <span className="text-[10px] text-slate-500 shrink-0 ml-4">{log.created_at}</span>
@@ -465,4 +432,3 @@ export default function AdminPanel() {
     </div>
   );
 }
-
