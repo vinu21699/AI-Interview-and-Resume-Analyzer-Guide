@@ -5,7 +5,7 @@ import {
   FileCheck, Mic, Award, TrendingUp, ArrowUpRight,
   Code2, Target, ArrowRight, ShieldCheck,
   ShieldAlert, Building2, AlertTriangle,
-  ChevronRight, RefreshCw, BookOpen, Check
+  ChevronRight, RefreshCw, BookOpen, Check, Layout
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -139,6 +139,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center flex-wrap gap-2.5">
+          <Link to="/resume-builder" className="btn-secondary text-xs py-1.5 flex items-center gap-1.5 text-emerald-400 border-emerald-500/30"><Layout className="w-3.5 h-3.5 text-emerald-400" /> 4 Resume Templates</Link>
           <Link to="/project-defense" className="btn-secondary text-xs py-1.5 flex items-center gap-1.5">
             <ShieldAlert className="w-3.5 h-3.5 text-purple-400" /> Project defense
           </Link>

@@ -35,6 +35,21 @@ body {
   color: var(--text-primary);
   margin: 0;
   padding: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-ambient-top {
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(16, 185, 129, 0.09), transparent 75%);
+}
+
+.resume-paper-shadow {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 @layer utilities {
