@@ -20,8 +20,8 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 bg-[#141415]/90 backdrop-blur-md border-b border-white/[0.08] px-6 py-3 flex items-center justify-between h-14">
       <div className="flex items-center gap-4">
         <Link to={isAdmin ? "/admin" : "/dashboard"} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#232325] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-center text-indigo-400 shadow-[0_0_12px_rgba(99,102,241,0.2)]">
+            <ShieldCheck className="w-4 h-4 text-indigo-400" />
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="font-semibold text-sm tracking-tight text-[#ededed]">

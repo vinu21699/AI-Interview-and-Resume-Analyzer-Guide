@@ -62,8 +62,8 @@ function TaglineReveal({ text }) {
 
   return (
     <div ref={containerRef} className="py-16 sm:py-20 max-w-3xl mx-auto px-6 text-center relative z-10">
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full gloss-pill text-xs font-mono text-emerald-400 mb-5">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full gloss-pill text-xs font-mono text-indigo-300 mb-5">
+        <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
         <span>The core premise</span>
       </div>
       <p className="text-lg sm:text-xl md:text-2xl font-normal sm:font-medium leading-relaxed text-balance tracking-normal text-slate-200">
@@ -74,7 +74,7 @@ function TaglineReveal({ text }) {
             <span
               key={index}
               className={`inline-block mr-[0.25em] transition-colors duration-500 ease-snappy ${
-                isLit ? 'text-white' : 'text-white/20'
+                isLit ? 'text-white font-medium' : 'text-slate-600'
               }`}
             >
               {word}
@@ -183,14 +183,14 @@ export default function LandingPage() {
         >
           {/* Brand Logo with Glossy Emblem */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-[1px] shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-              <div className="w-full h-full bg-[#090A0F] rounded-[11px] flex items-center justify-center text-emerald-400">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-400 via-sky-400 to-indigo-600 p-[1px] shadow-[0_0_15px_rgba(99,102,241,0.35)]">
+              <div className="w-full h-full bg-[#090A0F] rounded-[11px] flex items-center justify-center text-indigo-400">
+                <ShieldCheck className="w-4 h-4 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
               </div>
             </div>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-emerald-400 transition-colors">NexHire</span>
-              <span className="text-[10px] text-emerald-400 font-mono px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">2.0</span>
+              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-indigo-400 transition-colors">NexHire</span>
+              <span className="text-[10px] text-indigo-300 font-mono px-1.5 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/25">2.0</span>
             </div>
           </Link>
 
@@ -264,7 +264,7 @@ export default function LandingPage() {
                 </Link>
                 <Link
                   to="/register"
-                  className="gloss-btn-primary px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_20px_rgba(16,185,129,0.35)]"
+                  className="gloss-btn-primary px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_20px_rgba(99,102,241,0.35)]"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>Create account</span>
@@ -282,15 +282,16 @@ export default function LandingPage() {
         <section className="relative px-6 pt-16 sm:pt-28 pb-16 max-w-6xl mx-auto text-center">
           
           {/* Glossy Pill Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full gloss-pill text-xs font-mono text-slate-200 mb-8 shadow-inner">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 -ml-4"></span>
-            <span className="text-slate-300 font-medium">Calibrated against 1,200 engineering interview rubrics</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full gloss-pill text-xs font-mono text-indigo-200 mb-8 shadow-inner border-indigo-500/25">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-indigo-400 -ml-4"></span>
+            <span className="text-slate-200 font-medium">Calibrated against 1,200 engineering interview rubrics</span>
           </div>
 
-          {/* Heading 1: Metallic Silver Glossy Gradient */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight max-w-[780px] mx-auto text-balance leading-[1.05] gloss-heading-silver drop-shadow-lg">
-            Turn resume claims into bulletproof engineering proof
+          {/* Heading 1: Metallic Silver + Celestial Indigo Glossy Gradient */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight max-w-[820px] mx-auto text-balance leading-[1.08] drop-shadow-xl">
+            <span className="gloss-heading-silver block">Turn resume claims into</span>
+            <span className="gloss-heading-accent block mt-1">bulletproof engineering proof</span>
           </h1>
 
           {/* Subheading: Frosted Crisp Typography */}
@@ -304,7 +305,7 @@ export default function LandingPage() {
               <>
                 <button
                   onClick={scrollToAudit}
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-sm font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-sm font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(99,102,241,0.4)]"
                 >
                   <span>Audit your resume</span>
                   <ArrowRight className="w-4 h-4" />
@@ -320,9 +321,9 @@ export default function LandingPage() {
               <>
                 <Link
                   to="/login"
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-sm font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_30px_rgba(16,185,129,0.45)]"
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-sm font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_30px_rgba(99,102,241,0.45)]"
                 >
-                  <Lock className="w-4 h-4 text-emerald-950" />
+                  <Lock className="w-4 h-4 text-white" />
                   <span>Log in to start audit</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -344,11 +345,11 @@ export default function LandingPage() {
             </div>
             <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
               <span className="text-[11px] font-mono text-slate-400 block mb-1">Viva question bank</span>
-              <span className="text-2xl font-bold text-emerald-400 font-mono tracking-tight">7 rounds</span>
+              <span className="text-2xl font-bold text-indigo-400 font-mono tracking-tight">7 rounds</span>
             </div>
             <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
               <span className="text-[11px] font-mono text-slate-400 block mb-1">Evaluated rubrics</span>
-              <span className="text-2xl font-bold text-white font-mono tracking-tight">1,200+</span>
+              <span className="text-2xl font-bold text-sky-400 font-mono tracking-tight">1,200+</span>
             </div>
             <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
               <span className="text-[11px] font-mono text-slate-400 block mb-1">Average score lift</span>
@@ -652,7 +653,7 @@ export default function LandingPage() {
         {/* Section 3: Problem to Solution Contrast (Glossy Split) */}
         <section className="px-6 py-20 max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">The engineering difference</span>
+            <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider block mb-2 font-semibold">The engineering difference</span>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               Why generic AI mock interviewers fail serious candidates
             </h2>
@@ -692,33 +693,33 @@ export default function LandingPage() {
               </ul>
             </div>
 
-            {/* The NexHire Placement Engine Way: Emerald Glossy Glass Card */}
-            <div className="gloss-panel rounded-3xl p-7 sm:p-9 space-y-6 border border-emerald-500/40 gloss-card-hover shadow-[0_0_35px_rgba(16,185,129,0.15)]">
+            {/* The NexHire Placement Engine Way: Royal Indigo & Celestial Azure Glossy Card */}
+            <div className="gloss-panel rounded-3xl p-7 sm:p-9 space-y-6 border border-indigo-500/35 gloss-card-hover shadow-[0_0_35px_rgba(99,102,241,0.18)] bg-gradient-to-b from-indigo-500/[0.08] via-transparent to-transparent">
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.35)]">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-300 shadow-[0_0_20px_rgba(99,102,241,0.35)]">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-white">NexHire Placement Readiness Engine</h3>
-                  <span className="text-xs text-emerald-400 font-medium">Calibrated architectural defense</span>
+                  <span className="text-xs text-indigo-300 font-medium">Calibrated architectural defense</span>
                 </div>
               </div>
 
               <ul className="space-y-3.5 text-xs sm:text-sm text-slate-200">
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <span><strong>Seven round project viva</strong> that interrogates database choice, cache invalidation, and failure modes.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <span><strong>Automated claim verification</strong> that inspects every bullet point for defensible technical evidence.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <span><strong>Strict pressure interview mode</strong> challenging theoretical responses with real disk input output costs.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <span><strong>Calibrated placement readiness index</strong> giving an honest 0 to 100 rating with a personalized drill plan.</span>
                 </li>
               </ul>
@@ -730,7 +731,7 @@ export default function LandingPage() {
         {/* Section 4: Benefits Grid (Four Outcome-Driven Bullets) */}
         <section className="px-6 py-20 max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">Core outcomes</span>
+            <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider block mb-2 font-semibold">Core outcomes</span>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               Engineered to eliminate candidate vulnerability
             </h2>
@@ -739,7 +740,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
             <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.25)]">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Bulletproof claim verification</h3>
@@ -749,7 +750,7 @@ export default function LandingPage() {
             </div>
 
             <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.25)]">
                 <Terminal className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Seven round viva defense</h3>
@@ -759,7 +760,7 @@ export default function LandingPage() {
             </div>
 
             <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400 shadow-[0_0_15px_rgba(168,85,247,0.25)]">
                 <Compass className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Targeted seven day remediation</h3>
@@ -769,7 +770,7 @@ export default function LandingPage() {
             </div>
 
             <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.25)]">
                 <Layout className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Enterprise ATS fidelity</h3>
@@ -784,7 +785,7 @@ export default function LandingPage() {
         {/* Section 5: How It Works (Three Distinct Steps) */}
         <section className="px-6 py-20 max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">Process</span>
+            <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider block mb-2 font-semibold">Process</span>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               How the placement readiness engine works
             </h2>
@@ -794,7 +795,7 @@ export default function LandingPage() {
             
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
               <div className="flex items-center justify-between">
-                <span className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 shadow-inner">
+                <span className="w-9 h-9 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-xs font-mono font-bold text-indigo-400 shadow-inner">
                   01
                 </span>
                 <span className="text-[11px] font-mono text-slate-400">Intake</span>
@@ -807,7 +808,7 @@ export default function LandingPage() {
 
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
               <div className="flex items-center justify-between">
-                <span className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 shadow-inner">
+                <span className="w-9 h-9 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-xs font-mono font-bold text-sky-400 shadow-inner">
                   02
                 </span>
                 <span className="text-[11px] font-mono text-slate-400">Simulation</span>
@@ -837,7 +838,7 @@ export default function LandingPage() {
         {/* Section 6: Deep Feature Bento Grid */}
         <section className="px-6 py-20 max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">Technical depth</span>
+            <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider block mb-2 font-semibold">Technical depth</span>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               Eight comprehensive placement readiness modules
             </h2>
@@ -847,7 +848,7 @@ export default function LandingPage() {
             
             {/* Bento Card 1: Project Defense Viva */}
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.25)]">
                 <Terminal className="w-5 h-5" />
               </div>
               <div>
@@ -858,7 +859,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
+                className="text-xs text-indigo-400 hover:text-indigo-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Start defense session</span>
@@ -868,7 +869,7 @@ export default function LandingPage() {
 
             {/* Bento Card 2: Resume Claim Verification */}
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.25)]">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
@@ -879,7 +880,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
+                className="text-xs text-sky-400 hover:text-sky-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Scan resume claims</span>
@@ -889,7 +890,7 @@ export default function LandingPage() {
 
             {/* Bento Card 3: Pressure Interview Mode */}
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.25)]">
                 <Flame className="w-5 h-5" />
               </div>
               <div>
@@ -900,7 +901,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
+                className="text-xs text-rose-400 hover:text-rose-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Enter pressure mode</span>
@@ -910,7 +911,7 @@ export default function LandingPage() {
 
             {/* Bento Card 4: Weakness Radar */}
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400 shadow-[0_0_15px_rgba(168,85,247,0.25)]">
                 <Compass className="w-5 h-5" />
               </div>
               <div>
@@ -921,7 +922,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/dashboard', 'Weakness Radar')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
+                className="text-xs text-violet-400 hover:text-violet-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>View readiness radar</span>
@@ -931,7 +932,7 @@ export default function LandingPage() {
 
             {/* Bento Card 5: Target Company Prep */}
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.25)]">
                 <Target className="w-5 h-5" />
               </div>
               <div>
@@ -942,7 +943,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/company-prep', 'Target Company Prep')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
+                className="text-xs text-amber-400 hover:text-amber-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Select target company</span>
@@ -952,7 +953,7 @@ export default function LandingPage() {
 
             {/* Bento Card 6: Resume Studio Formats */}
             <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
                 <Layout className="w-5 h-5" />
               </div>
               <div>
@@ -963,7 +964,7 @@ export default function LandingPage() {
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
+                className="text-xs text-cyan-400 hover:text-cyan-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Open resume studio</span>
@@ -982,8 +983,8 @@ export default function LandingPage() {
               /* AUTHENTICATED STATE: USER IS SIGNED IN */
               <>
                 <div className="text-center space-y-2 max-w-lg mx-auto">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-xs font-mono text-emerald-300 mb-1 font-medium shadow-sm">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-xs font-mono text-indigo-300 mb-1 font-medium shadow-sm">
+                    <Check className="w-3.5 h-3.5 text-indigo-400" />
                     <span>Signed in as {user.name || user.email}</span>
                   </div>
                   <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight gloss-heading-silver">
@@ -995,7 +996,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Drag and Drop Zone for Authenticated Users */}
-                <div className="border border-dashed border-white/[0.2] hover:border-emerald-400/60 rounded-2xl p-9 text-center transition-all duration-300 ease-snappy bg-black/40 backdrop-blur-md relative group cursor-pointer shadow-inner">
+                <div className="border border-dashed border-white/[0.2] hover:border-indigo-400/60 rounded-2xl p-9 text-center transition-all duration-300 ease-snappy bg-black/40 backdrop-blur-md relative group cursor-pointer shadow-inner">
                   <input
                     id="landing-resume-file-input"
                     type="file"
@@ -1004,17 +1005,17 @@ export default function LandingPage() {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
                   <div className="w-12 h-12 rounded-2xl bg-white/[0.08] border border-white/[0.15] text-slate-300 mx-auto flex items-center justify-center mb-3.5 shadow-sm group-hover:scale-105 transition-transform">
-                    <Upload className="w-5 h-5 text-emerald-400" />
+                    <Upload className="w-5 h-5 text-indigo-400" />
                   </div>
                   {file ? (
                     <div className="space-y-1.5">
-                      <p className="text-sm font-mono text-emerald-400 font-bold">{file.name}</p>
+                      <p className="text-sm font-mono text-indigo-400 font-bold">{file.name}</p>
                       <p className="text-[11px] text-slate-400 font-mono">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready to audit</p>
                     </div>
                   ) : (
                     <div className="space-y-1.5">
                       <p className="text-sm text-slate-200 font-medium">
-                        Drop your resume here, or <span className="text-emerald-400 underline font-semibold">browse files</span>
+                        Drop your resume here, or <span className="text-indigo-400 underline font-semibold">browse files</span>
                       </p>
                       <p className="text-[11px] text-slate-400 font-mono">PDF or DOCX up to 10MB</p>
                     </div>
@@ -1025,16 +1026,16 @@ export default function LandingPage() {
                 <button
                   onClick={handleUploadAndAnalyze}
                   disabled={loading}
-                  className="w-full py-3.5 rounded-full gloss-btn-primary font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                  className="w-full py-3.5 rounded-full gloss-btn-primary font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(99,102,241,0.4)]"
                 >
                   {loading ? (
                     <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-emerald-950" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-white" />
                       <span>Evaluating resume claims...</span>
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="w-4 h-4 text-emerald-950" />
+                      <ShieldCheck className="w-4 h-4 text-white" />
                       <span>Run instant placement audit</span>
                     </>
                   )}
@@ -1117,7 +1118,7 @@ export default function LandingPage() {
         {/* Section 8: FAQ Accordion (Seven Comprehensive Questions) */}
         <section className="px-6 py-20 max-w-3xl mx-auto">
           <div className="text-center space-y-2 mb-12">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block font-semibold">Common inquiries</span>
+            <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider block font-semibold">Common inquiries</span>
             <h2 className="text-3xl font-bold text-white tracking-tight gloss-heading-silver">Frequently asked questions</h2>
             <p className="text-xs sm:text-sm text-slate-400">Everything you need to know about the placement readiness engine.</p>
           </div>
@@ -1158,11 +1159,11 @@ export default function LandingPage() {
                 <div key={idx} className="gloss-panel rounded-2xl p-5 space-y-2 border border-white/[0.12] gloss-card-hover">
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
-                    className="w-full flex items-center justify-between text-left text-xs sm:text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 rounded"
+                    className="w-full flex items-center justify-between text-left text-xs sm:text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 rounded"
                   >
                     <span>{faq.q}</span>
                     {isOpen ? (
-                      <ChevronUp className="w-4 h-4 text-emerald-400 shrink-0 ml-2" />
+                      <ChevronUp className="w-4 h-4 text-indigo-400 shrink-0 ml-2" />
                     ) : (
                       <ChevronDown className="w-4 h-4 text-slate-400 shrink-0 ml-2" />
                     )}
@@ -1183,11 +1184,11 @@ export default function LandingPage() {
           <div className="gloss-panel rounded-3xl p-9 sm:p-14 space-y-7 border border-white/[0.18] shadow-[0_32px_70px_rgba(0,0,0,0.7)] relative overflow-hidden">
             
             {/* Ambient Conical Accent Inside Banner */}
-            <div className="absolute -top-24 -left-24 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-sky-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
             <div className="space-y-3 max-w-xl mx-auto relative z-10">
-              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block font-semibold">Get placement ready</span>
+              <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider block font-semibold">Get placement ready</span>
               <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight gloss-heading-silver">
                 Ready to turn resume claims into placement offers?
               </h2>
@@ -1201,7 +1202,7 @@ export default function LandingPage() {
                 <>
                   <button
                     onClick={scrollToAudit}
-                    className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(99,102,241,0.4)]"
                   >
                     <span>Audit your resume</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -1217,9 +1218,9 @@ export default function LandingPage() {
                 <>
                   <Link
                     to="/login"
-                    className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(16,185,129,0.45)]"
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(99,102,241,0.45)]"
                   >
-                    <LogIn className="w-3.5 h-3.5 text-emerald-950" />
+                    <LogIn className="w-3.5 h-3.5 text-white" />
                     <span>Log in to start audit</span>
                   </Link>
                   <Link
@@ -1246,7 +1247,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-400">
           
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-white/[0.08] border border-white/[0.14] flex items-center justify-center text-emerald-400 shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-white/[0.08] border border-white/[0.14] flex items-center justify-center text-indigo-400 shadow-sm">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div className="space-y-0.5">
