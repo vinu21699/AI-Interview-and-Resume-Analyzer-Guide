@@ -8,7 +8,7 @@ import {
   ShieldCheck, Award, Check, ChevronDown, ChevronUp,
   RefreshCw, BarChart3, Target, Mic, Code2, Sparkles, Sliders,
   Terminal, Zap, Flame, Compass, Eye, Layout, ExternalLink,
-  BookOpen, Lock, Cpu, Layers, HelpCircle
+  BookOpen, Lock, Cpu, Layers, HelpCircle, LogIn, UserPlus, LogOut
 } from 'lucide-react';
 
 // B11 Mandatory Tagline Reveal Component
@@ -90,17 +90,38 @@ export default function LandingPage() {
   const [activeTab, setActiveTab] = useState('defense'); // 'defense' | 'claims' | 'pressure' | 'radar' | 'templates'
   const [activeTemplatePreview, setActiveTemplatePreview] = useState('modern');
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { addToast } = useNotification();
   const navigate = useNavigate();
 
+  // Helper for strictly gated feature actions
+  const handleProtectedNavigation = (targetPath, featureName) => {
+    if (!user) {
+      addToast(`Please sign in first to access ${featureName}.`, 'warning');
+      navigate('/login', { state: { from: { pathname: targetPath } } });
+    } else {
+      navigate(targetPath);
+    }
+  };
+
   const handleFileChange = (e) => {
+    if (!user) {
+      addToast('Please sign in or create an account to upload resumes.', 'warning');
+      navigate('/login');
+      return;
+    }
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
   };
 
   const handleUploadAndAnalyze = async () => {
+    if (!user) {
+      addToast('Authentication required. Please sign in before auditing resumes.', 'warning');
+      navigate('/login');
+      return;
+    }
+
     if (!file) {
       addToast('Please select a resume file in PDF or DOCX format.', 'warning');
       const fileInput = document.getElementById('landing-resume-file-input');
@@ -113,24 +134,15 @@ export default function LandingPage() {
       let formData = new FormData();
       formData.append('file', file);
 
-      let token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (!token) {
-        try {
-          const authRes = await api.post('/auth/login', {
-            email: 'user@nexhire.ai',
-            password: 'user123'
-          });
-          if (authRes.data?.access_token) {
-            localStorage.setItem('token', authRes.data.access_token);
-            token = authRes.data.access_token;
-          }
-        } catch {
-          // guest fallback
-        }
+        addToast('Your session has expired. Please sign in again.', 'error');
+        navigate('/login');
+        return;
       }
 
       const res = await api.post('/resume/analyze', formData, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       sessionStorage.setItem('initialAnalysis', JSON.stringify(res.data));
@@ -177,37 +189,79 @@ export default function LandingPage() {
             </div>
           </Link>
 
+          {/* Feature Navigation - Strictly Protected on Click */}
           <div className="hidden lg:flex items-center gap-6 text-xs font-medium text-slate-300">
-            <Link to="/project-defense" className="hover:text-white transition-colors duration-300 ease-snappy">Project defense</Link>
-            <Link to="/resume-claim-verification" className="hover:text-white transition-colors duration-300 ease-snappy">Claim verification</Link>
-            <Link to="/mock-interview" className="hover:text-white transition-colors duration-300 ease-snappy">Pressure mode</Link>
-            <Link to="/resume-builder" className="hover:text-white transition-colors duration-300 ease-snappy">Resume studio</Link>
-            <Link to="/company-prep" className="hover:text-white transition-colors duration-300 ease-snappy">Target prep</Link>
+            <button
+              onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense')}
+              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+            >
+              <span>Project defense</span>
+              {!user && <Lock className="w-3 h-3 text-slate-500" />}
+            </button>
+            <button
+              onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
+              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+            >
+              <span>Claim verification</span>
+              {!user && <Lock className="w-3 h-3 text-slate-500" />}
+            </button>
+            <button
+              onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
+              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+            >
+              <span>Pressure mode</span>
+              {!user && <Lock className="w-3 h-3 text-slate-500" />}
+            </button>
+            <button
+              onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
+              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+            >
+              <span>Resume studio</span>
+              {!user && <Lock className="w-3 h-3 text-slate-500" />}
+            </button>
+            <button
+              onClick={() => handleProtectedNavigation('/company-prep', 'Target Company Prep')}
+              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+            >
+              <span>Target prep</span>
+              {!user && <Lock className="w-3 h-3 text-slate-500" />}
+            </button>
           </div>
 
           <div className="flex items-center gap-2">
             {user ? (
-              <Link
-                to="/dashboard"
-                className="px-3 py-2 rounded-lg bg-[#272727] hover:bg-[#313131] text-xs font-semibold text-white border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center gap-1.5 active:scale-[0.98]"
-              >
-                Dashboard <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            ) : (
-              <>
+              <div className="flex items-center gap-2">
                 <Link
-                  to="/login"
-                  className="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition-colors duration-300 ease-snappy"
+                  to="/dashboard"
+                  className="px-3 py-2 rounded-lg bg-[#272727] hover:bg-[#313131] text-xs font-semibold text-white border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center gap-1.5 active:scale-[0.98]"
                 >
-                  Log in
+                  Dashboard <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <button
-                  onClick={scrollToAudit}
-                  className="px-3 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy active:scale-[0.98] shadow-sm"
+                  onClick={logout}
+                  title="Sign out"
+                  className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#272727] border border-transparent hover:border-white/[0.08] transition-colors"
                 >
-                  Start free audit
+                  <LogOut className="w-4 h-4" />
                 </button>
-              </>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="px-3 py-2 rounded-lg text-xs font-semibold text-white hover:text-emerald-400 transition-colors duration-300 ease-snappy flex items-center gap-1.5"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Log in</span>
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-3 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy active:scale-[0.98] shadow-sm flex items-center gap-1.5"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>Create account</span>
+                </Link>
+              </div>
             )}
           </div>
         </nav>
@@ -235,21 +289,41 @@ export default function LandingPage() {
             Superficial AI interviewers only ask textbook trivia. NexHire cross examines your actual project architecture, simulates strict viva pressure rounds, and calculates your true placement readiness score.
           </p>
 
-          {/* Single Primary Action Above the Fold */}
+          {/* Single Primary Action Above the Fold - Strictly Gated */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={scrollToAudit}
-              className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
-            >
-              <span>Start free placement audit</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <Link
-              to="/dashboard"
-              className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-sm font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
-            >
-              <span>Explore candidate dashboard</span>
-            </Link>
+            {user ? (
+              <>
+                <button
+                  onClick={scrollToAudit}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                >
+                  <span>Audit your resume</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <Link
+                  to="/dashboard"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-sm font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                >
+                  <span>Candidate dashboard</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>Log in to start audit</span>
+                </Link>
+                <Link
+                  to="/register"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-sm font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                >
+                  <span>Create free account</span>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Proof Strip */}
@@ -362,10 +436,14 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex justify-end pt-2">
-                    <Link to="/project-defense" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5">
+                    <button
+                      onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense Viva')}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                    >
+                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                       <span>Launch full seven round project defense</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -396,10 +474,14 @@ export default function LandingPage() {
 
                   <div className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 flex items-center justify-between text-xs flex-wrap gap-2">
                     <span className="text-slate-300">Diagnosis: High technical validity. Candidate demonstrated clear cache stampede prevention.</span>
-                    <Link to="/resume-claim-verification" className="text-emerald-400 hover:text-emerald-300 font-mono text-xs flex items-center gap-1">
+                    <button
+                      onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
+                      className="text-emerald-400 hover:text-emerald-300 font-mono text-xs flex items-center gap-1"
+                    >
+                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                       <span>Verify all claims</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -433,10 +515,14 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex justify-end pt-1">
-                    <Link to="/mock-interview" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5">
+                    <button
+                      onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                    >
+                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                       <span>Launch pressure interview session</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -481,10 +567,14 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex justify-end pt-1">
-                    <Link to="/dashboard" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5">
+                    <button
+                      onClick={() => handleProtectedNavigation('/dashboard', 'Weakness Radar')}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                    >
+                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                       <span>Open full weakness radar on dashboard</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -528,10 +618,14 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex justify-end pt-1">
-                    <Link to="/resume-builder" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5">
+                    <button
+                      onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                    >
+                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                       <span>Customize and export in resume studio</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -750,10 +844,14 @@ export default function LandingPage() {
                   Seven round technical inquiry scrutinizing database selection, latency tradeoffs, edge cases, and architectural justifications.
                 </p>
               </div>
-              <Link to="/project-defense" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+              <button
+                onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+              >
+                {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Start defense session</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
             </div>
 
             {/* Bento Card 2: Resume Claim Verification */}
@@ -767,10 +865,14 @@ export default function LandingPage() {
                   Scans bullet points for metric inflation and generates targeted cross examination questions to verify actual ownership.
                 </p>
               </div>
-              <Link to="/resume-claim-verification" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+              <button
+                onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+              >
+                {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Scan resume claims</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
             </div>
 
             {/* Bento Card 3: Pressure Interview Mode */}
@@ -784,10 +886,14 @@ export default function LandingPage() {
                   Simulates intense interviewer pushback, questioning standard answers and measuring composure under timed constraints.
                 </p>
               </div>
-              <Link to="/mock-interview" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+              <button
+                onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+              >
+                {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Enter pressure mode</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
             </div>
 
             {/* Bento Card 4: Weakness Radar */}
@@ -801,10 +907,14 @@ export default function LandingPage() {
                   Tracks competency across algorithms, system design, and communication, displaying quantifiable score improvements over time.
                 </p>
               </div>
-              <Link to="/dashboard" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+              <button
+                onClick={() => handleProtectedNavigation('/dashboard', 'Weakness Radar')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+              >
+                {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>View readiness radar</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
             </div>
 
             {/* Bento Card 5: Target Company Prep */}
@@ -818,10 +928,14 @@ export default function LandingPage() {
                   Aligns your technical prep against specific interview formats used by Google, Amazon, Microsoft, and high scale startups.
                 </p>
               </div>
-              <Link to="/company-prep" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+              <button
+                onClick={() => handleProtectedNavigation('/company-prep', 'Target Company Prep')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+              >
+                {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Select target company</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
             </div>
 
             {/* Bento Card 6: Resume Studio Formats */}
@@ -835,74 +949,139 @@ export default function LandingPage() {
                   Four engineered templates built with linear headings and vector glyph typography for perfect ATS parsing.
                 </p>
               </div>
-              <Link to="/resume-builder" className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+              <button
+                onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+              >
+                {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Open resume studio</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
             </div>
 
           </div>
         </section>
 
-        {/* Section 7: Dropzone Upload Section (Core Conversion & Risk Reversal) */}
+        {/* Section 7: Dropzone Upload Section (STRICTLY AUTHENTICATED) */}
         <section id="audit-section" className="px-6 py-16 max-w-4xl mx-auto">
           <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 sm:p-10 space-y-6">
             
-            <div className="text-center space-y-1.5 max-w-lg mx-auto">
-              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block">Risk free assessment</span>
-              <h2 className="text-2xl font-semibold text-white tracking-tight">Audit your resume for interview vulnerabilities</h2>
-              <p className="text-xs text-slate-400 leading-relaxed text-pretty">
-                Upload your resume in PDF or DOCX format to receive an instant analysis of claim risks, keyword coverage, and ATS parsing readiness.
-              </p>
-            </div>
-
-            {/* Drag and Drop Zone */}
-            <div className="border border-dashed border-white/[0.12] hover:border-emerald-500/50 rounded-xl p-8 text-center transition-colors duration-300 ease-snappy bg-[#141415] relative group cursor-pointer">
-              <input
-                id="landing-resume-file-input"
-                type="file"
-                accept=".pdf,.docx,.txt"
-                onChange={handleFileChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-              />
-              <div className="w-10 h-10 rounded-lg bg-[#272727] border border-white/[0.08] text-slate-300 mx-auto flex items-center justify-center mb-3">
-                <Upload className="w-4 h-4 text-emerald-400" />
-              </div>
-              {file ? (
-                <div className="space-y-1">
-                  <p className="text-xs font-mono text-emerald-400 font-semibold">{file.name}</p>
-                  <p className="text-[11px] text-slate-400 font-mono">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready to audit</p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  <p className="text-xs text-slate-200 font-medium">
-                    Drop your resume here, or <span className="text-emerald-400 underline">browse files</span>
+            {user ? (
+              /* AUTHENTICATED STATE: USER IS SIGNED IN */
+              <>
+                <div className="text-center space-y-1.5 max-w-lg mx-auto">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-400 mb-1">
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Signed in as {user.name || user.email}</span>
+                  </div>
+                  <h2 className="text-2xl font-semibold text-white tracking-tight">Audit your resume for interview vulnerabilities</h2>
+                  <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                    Upload your resume in PDF or DOCX format to receive an instant analysis of claim risks, keyword coverage, and ATS parsing readiness.
                   </p>
-                  <p className="text-[11px] text-slate-400 font-mono">PDF or DOCX up to 10MB</p>
                 </div>
-              )}
-            </div>
 
-            {/* Submit Action */}
-            <button
-              onClick={handleUploadAndAnalyze}
-              disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs flex items-center justify-center gap-2 transition-colors duration-300 ease-snappy shadow-sm active:scale-[0.98]"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Evaluating resume claims...</span>
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Run instant placement audit</span>
-                </>
-              )}
-            </button>
+                {/* Drag and Drop Zone for Authenticated Users */}
+                <div className="border border-dashed border-white/[0.12] hover:border-emerald-500/50 rounded-xl p-8 text-center transition-colors duration-300 ease-snappy bg-[#141415] relative group cursor-pointer">
+                  <input
+                    id="landing-resume-file-input"
+                    type="file"
+                    accept=".pdf,.docx,.txt"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <div className="w-10 h-10 rounded-lg bg-[#272727] border border-white/[0.08] text-slate-300 mx-auto flex items-center justify-center mb-3">
+                    <Upload className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  {file ? (
+                    <div className="space-y-1">
+                      <p className="text-xs font-mono text-emerald-400 font-semibold">{file.name}</p>
+                      <p className="text-[11px] text-slate-400 font-mono">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready to audit</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <p className="text-xs text-slate-200 font-medium">
+                        Drop your resume here, or <span className="text-emerald-400 underline">browse files</span>
+                      </p>
+                      <p className="text-[11px] text-slate-400 font-mono">PDF or DOCX up to 10MB</p>
+                    </div>
+                  )}
+                </div>
 
-            {/* Risk Reversal Points */}
+                {/* Submit Action */}
+                <button
+                  onClick={handleUploadAndAnalyze}
+                  disabled={loading}
+                  className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs flex items-center justify-center gap-2 transition-colors duration-300 ease-snappy shadow-sm active:scale-[0.98]"
+                >
+                  {loading ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Evaluating resume claims...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>Run instant placement audit</span>
+                    </>
+                  )}
+                </button>
+              </>
+            ) : (
+              /* UNAUTHENTICATED STATE: LOGIN STRICTLY REQUIRED */
+              <div className="text-center space-y-5 max-w-lg mx-auto py-4">
+                <div className="w-12 h-12 rounded-xl bg-[#272727] border border-white/[0.08] text-amber-400 mx-auto flex items-center justify-center">
+                  <Lock className="w-6 h-6" />
+                </div>
+                
+                <div className="space-y-2">
+                  <span className="text-xs font-mono text-amber-400 uppercase tracking-wider block">
+                    Authentication required
+                  </span>
+                  <h2 className="text-2xl font-semibold text-white tracking-tight">
+                    Sign in to audit your resume
+                  </h2>
+                  <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                    To protect candidate privacy and preserve your placement audit history, you must be logged in before uploading resumes or accessing technical modules.
+                  </p>
+                </div>
+
+                {/* Locked Dropzone Placeholder */}
+                <div
+                  onClick={() => {
+                    addToast('Please sign in or create an account to upload resumes.', 'warning');
+                    navigate('/login');
+                  }}
+                  className="border border-dashed border-white/[0.12] hover:border-amber-400/50 rounded-xl p-8 text-center transition-colors duration-300 ease-snappy bg-[#141415] cursor-pointer space-y-2 group"
+                >
+                  <Lock className="w-5 h-5 text-slate-500 group-hover:text-amber-400 mx-auto transition-colors" />
+                  <p className="text-xs text-slate-300 font-medium">
+                    Upload locked for guest visitors
+                  </p>
+                  <p className="text-[11px] text-slate-500 font-mono">
+                    Click here to log in or register your candidate profile
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                  <Link
+                    to="/login"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs flex items-center justify-center gap-2 transition-colors duration-300 ease-snappy shadow-sm active:scale-[0.98]"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Log in to upload resume</span>
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white font-semibold text-xs border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>Create free account</span>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Security Points */}
             <div className="flex flex-wrap items-center justify-center gap-6 pt-2 text-[11px] text-slate-400 font-mono">
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -910,11 +1089,11 @@ export default function LandingPage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Instant diagnostic report</span>
+                <span>Strict candidate data privacy</span>
               </span>
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Private and confidential</span>
+                <span>Full placement readiness report</span>
               </span>
             </div>
 
@@ -931,6 +1110,10 @@ export default function LandingPage() {
 
           <div className="space-y-3">
             {[
+              {
+                q: "Why do I need to log in before uploading my resume?",
+                a: "NexHire securely parses and stores your project documentation, claim verification history, and viva evaluations under your private candidate account. Requiring authentication ensures complete privacy and protects your personal data."
+              },
               {
                 q: "How does Project Defense differ from standard ChatGPT prompts?",
                 a: "Generic ChatGPT prompts offer conversational praise and shallow textbook questions. NexHire Project Defense acts as a strict technical examiner across seven sequential rounds, asking targeted 'Why' questions that challenge architectural tradeoffs, caching strategies, and data consistency models."
@@ -954,10 +1137,6 @@ export default function LandingPage() {
               {
                 q: "Can I prepare for specific target companies like Google, Amazon, or high growth startups?",
                 a: "Yes. The Target Company Preparation module adapts interview questioning and evaluation standards to match the specific hiring rubrics of top tech firms, focusing on company specific leadership principles and system design expectations."
-              },
-              {
-                q: "Is my resume data kept private and confidential?",
-                a: "Your resume and interview responses are processed strictly for your private placement readiness analysis. We never sell, share, or train public models on your personal project documentation."
               }
             ].map((faq, idx) => {
               const isOpen = openFaqIndex === idx;
@@ -985,7 +1164,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 9: Final High-Converting CTA */}
+        {/* Section 9: Final High-Converting CTA - Strictly Gated */}
         <section className="px-6 py-20 max-w-4xl mx-auto text-center">
           <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-8 sm:p-12 space-y-6">
             
@@ -995,24 +1174,44 @@ export default function LandingPage() {
                 Ready to turn resume claims into placement offers?
               </h2>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed text-pretty">
-                Take the initial diagnostic audit today. Discover vulnerable resume claims, test yourself against strict viva examiners, and benchmark your engineering readiness.
+                Create your account or log in to discover vulnerable resume claims, test yourself against strict viva examiners, and benchmark your engineering readiness.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <button
-                onClick={scrollToAudit}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
-              >
-                <span>Start free placement audit</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-              <Link
-                to="/dashboard"
-                className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-xs font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
-              >
-                <span>Explore candidate dashboard</span>
-              </Link>
+              {user ? (
+                <>
+                  <button
+                    onClick={scrollToAudit}
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                  >
+                    <span>Audit your resume</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <Link
+                    to="/dashboard"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-xs font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
+                    <span>Candidate dashboard</span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Log in to start audit</span>
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-xs font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
+                    <span>Create free account</span>
+                  </Link>
+                </>
+              )}
             </div>
 
             <p className="text-[11px] text-slate-400 font-mono pt-2">
@@ -1039,10 +1238,10 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-xs font-mono">
-            <Link to="/project-defense" className="hover:text-white transition-colors duration-200">Viva defense</Link>
-            <Link to="/resume-claim-verification" className="hover:text-white transition-colors duration-200">Claim audit</Link>
-            <Link to="/mock-interview" className="hover:text-white transition-colors duration-200">Pressure mode</Link>
-            <Link to="/resume-builder" className="hover:text-white transition-colors duration-200">Resume studio</Link>
+            <button onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense')} className="hover:text-white transition-colors duration-200">Viva defense</button>
+            <button onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')} className="hover:text-white transition-colors duration-200">Claim audit</button>
+            <button onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')} className="hover:text-white transition-colors duration-200">Pressure mode</button>
+            <button onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')} className="hover:text-white transition-colors duration-200">Resume studio</button>
             <a
               href="https://github.com/vinu21699/AI-Interview-and-Resume-Analyzer-Guide"
               target="_blank"
