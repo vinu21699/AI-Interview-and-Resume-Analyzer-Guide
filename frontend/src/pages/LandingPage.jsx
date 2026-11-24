@@ -289,9 +289,9 @@ export default function LandingPage() {
           </div>
 
           {/* Heading 1: Metallic Silver + Celestial Indigo Glossy Gradient */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight max-w-[820px] mx-auto text-balance leading-[1.08] drop-shadow-xl">
-            <span className="gloss-heading-silver block">Turn resume claims into</span>
-            <span className="gloss-heading-accent block mt-1">bulletproof engineering proof</span>
+          <h1 className="text-3xl sm:text-4xl md:text-[46px] lg:text-[54px] font-bold tracking-tight max-w-4xl mx-auto leading-[1.28] md:leading-[1.3] drop-shadow-xl">
+            <span className="gloss-heading-silver block pb-1">Turn resume claims into</span>
+            <span className="gloss-heading-accent block mt-1.5 sm:mt-2.5">bulletproof engineering proof</span>
           </h1>
 
           {/* Subheading: Frosted Crisp Typography */}
@@ -338,7 +338,8 @@ export default function LandingPage() {
           </div>
 
           {/* Proof Strip with Frosted Glass Panels */}
-          <div className="mt-14 pt-8 border-t border-white/[0.08] max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent mt-14 mb-8 max-w-4xl mx-auto"></div>
+          <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
             <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
               <span className="text-[11px] font-mono text-slate-400 block mb-1">ATS parse accuracy</span>
               <span className="text-2xl font-bold text-white font-mono tracking-tight">94.2%</span>
