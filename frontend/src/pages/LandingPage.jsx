@@ -8,7 +8,8 @@ import {
   ShieldCheck, Award, Check, ChevronDown, ChevronUp,
   RefreshCw, BarChart3, Target, Mic, Code2, Sparkles, Sliders,
   Terminal, Zap, Flame, Compass, Eye, Layout, ExternalLink,
-  BookOpen, Lock, Cpu, Layers, HelpCircle, LogIn, UserPlus, LogOut
+  BookOpen, Lock, Cpu, Layers, HelpCircle, LogIn, UserPlus, LogOut,
+  ChevronRight, Activity
 } from 'lucide-react';
 
 // B11 Mandatory Tagline Reveal Component
@@ -60,8 +61,9 @@ function TaglineReveal({ text }) {
   const words = text.split(' ');
 
   return (
-    <div ref={containerRef} className="py-20 sm:py-28 max-w-4xl mx-auto px-6 text-center">
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181818] border border-white/[0.08] text-xs font-mono text-emerald-400 mb-6">
+    <div ref={containerRef} className="py-24 sm:py-32 max-w-4xl mx-auto px-6 text-center relative z-10">
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full gloss-pill text-xs font-mono text-emerald-400 mb-6">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>The core premise</span>
       </div>
       <p className="text-2xl sm:text-4xl md:text-5xl font-semibold leading-tight text-balance tracking-tight">
@@ -72,7 +74,7 @@ function TaglineReveal({ text }) {
             <span
               key={index}
               className={`inline-block mr-[0.28em] transition-colors duration-500 ease-snappy ${
-                isLit ? 'text-white' : 'text-white/25'
+                isLit ? 'text-white' : 'text-white/20'
               }`}
             >
               {word}
@@ -163,29 +165,32 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#141415] text-[#ededed] font-sans selection:bg-emerald-500 selection:text-black">
+    <div className="min-h-screen text-[#ededed] font-sans selection:bg-emerald-500 selection:text-black gloss-ambient-backdrop bg-dot-grid relative overflow-x-hidden">
       
       {/* Keyboard Accessibility Skip Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-emerald-500 text-black font-semibold rounded-lg text-xs"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-emerald-500 text-black font-semibold rounded-lg text-xs shadow-lg"
       >
         Skip to main content
       </a>
 
-      {/* B7 Floating Navigation Bar */}
-      <header className="sticky top-3 z-50 px-4 sm:px-6 max-w-6xl mx-auto">
+      {/* Floating Apple-Style Glossy Dock Navigation */}
+      <header className="sticky top-4 z-50 px-4 sm:px-6 max-w-5xl mx-auto">
         <nav
           aria-label="Primary"
-          className="bg-[#181818]/90 backdrop-blur-md border border-white/[0.08] rounded-2xl px-4 sm:px-6 h-14 flex items-center justify-between shadow-lg"
+          className="gloss-panel rounded-full px-5 sm:px-7 h-16 flex items-center justify-between shadow-[0_16px_40px_rgba(0,0,0,0.5)] border border-white/[0.14]"
         >
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          {/* Brand Logo with Glossy Emblem */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 p-[1px] shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+              <div className="w-full h-full bg-[#090A0F] rounded-[11px] flex items-center justify-center text-emerald-400">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+              </div>
             </div>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-semibold text-sm tracking-tight text-white">NexHire</span>
-              <span className="text-[11px] text-slate-400 font-mono">2.0</span>
+              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-emerald-400 transition-colors">NexHire</span>
+              <span className="text-[10px] text-emerald-400 font-mono px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">2.0</span>
             </div>
           </Link>
 
@@ -193,70 +198,73 @@ export default function LandingPage() {
           <div className="hidden lg:flex items-center gap-6 text-xs font-medium text-slate-300">
             <button
               onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense')}
-              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+              className="hover:text-white transition-colors duration-200 ease-snappy flex items-center gap-1.5 py-1"
             >
               <span>Project defense</span>
               {!user && <Lock className="w-3 h-3 text-slate-500" />}
             </button>
             <button
               onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
-              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+              className="hover:text-white transition-colors duration-200 ease-snappy flex items-center gap-1.5 py-1"
             >
               <span>Claim verification</span>
               {!user && <Lock className="w-3 h-3 text-slate-500" />}
             </button>
             <button
               onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
-              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+              className="hover:text-white transition-colors duration-200 ease-snappy flex items-center gap-1.5 py-1"
             >
               <span>Pressure mode</span>
               {!user && <Lock className="w-3 h-3 text-slate-500" />}
             </button>
             <button
               onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
-              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+              className="hover:text-white transition-colors duration-200 ease-snappy flex items-center gap-1.5 py-1"
             >
               <span>Resume studio</span>
               {!user && <Lock className="w-3 h-3 text-slate-500" />}
             </button>
             <button
               onClick={() => handleProtectedNavigation('/company-prep', 'Target Company Prep')}
-              className="hover:text-white transition-colors duration-300 ease-snappy flex items-center gap-1"
+              className="hover:text-white transition-colors duration-200 ease-snappy flex items-center gap-1.5 py-1"
             >
               <span>Target prep</span>
               {!user && <Lock className="w-3 h-3 text-slate-500" />}
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* User Auth State Buttons */}
+          <div className="flex items-center gap-2.5">
             {user ? (
               <div className="flex items-center gap-2">
                 <Link
                   to="/dashboard"
-                  className="px-3 py-2 rounded-lg bg-[#272727] hover:bg-[#313131] text-xs font-semibold text-white border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center gap-1.5 active:scale-[0.98]"
+                  className="gloss-btn-secondary px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm"
                 >
-                  Dashboard <ArrowRight className="w-3.5 h-3.5" />
+                  <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Dashboard</span>
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
                 <button
                   onClick={logout}
                   title="Sign out"
-                  className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#272727] border border-transparent hover:border-white/[0.08] transition-colors"
+                  className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="px-3 py-2 rounded-lg text-xs font-semibold text-white hover:text-emerald-400 transition-colors duration-300 ease-snappy flex items-center gap-1.5"
+                  className="gloss-btn-secondary px-3.5 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5"
                 >
-                  <LogIn className="w-3.5 h-3.5" />
+                  <LogIn className="w-3.5 h-3.5 text-slate-400" />
                   <span>Log in</span>
                 </Link>
                 <Link
                   to="/register"
-                  className="px-3 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy active:scale-[0.98] shadow-sm flex items-center gap-1.5"
+                  className="gloss-btn-primary px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_20px_rgba(16,185,129,0.35)]"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>Create account</span>
@@ -268,41 +276,42 @@ export default function LandingPage() {
       </header>
 
       {/* Main Content Area */}
-      <main id="main-content">
+      <main id="main-content" className="relative z-10">
         
         {/* Section 1: Hero Section */}
-        <section className="relative px-6 pt-16 sm:pt-24 pb-16 max-w-6xl mx-auto text-center">
+        <section className="relative px-6 pt-16 sm:pt-28 pb-16 max-w-6xl mx-auto text-center">
           
-          {/* Proof Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#181818] border border-white/[0.08] text-xs font-mono text-slate-300 mb-6">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Calibrated against 1,200 engineering interview rubrics</span>
+          {/* Glossy Pill Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full gloss-pill text-xs font-mono text-slate-200 mb-8 shadow-inner">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 -ml-4"></span>
+            <span className="text-slate-300 font-medium">Calibrated against 1,200 engineering interview rubrics</span>
           </div>
 
-          {/* Heading 1: Capped at 680px, Sentence Case, Gradient Text */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight max-w-[680px] mx-auto text-balance leading-[1.08] hero-heading-gradient">
+          {/* Heading 1: Metallic Silver Glossy Gradient */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight max-w-[780px] mx-auto text-balance leading-[1.05] gloss-heading-silver drop-shadow-lg">
             Turn resume claims into bulletproof engineering proof
           </h1>
 
-          {/* Subheading: Capped at 680px, Specificity */}
-          <p className="mt-5 text-sm sm:text-base text-slate-400 max-w-[680px] mx-auto text-pretty leading-relaxed">
+          {/* Subheading: Frosted Crisp Typography */}
+          <p className="mt-6 text-base sm:text-lg text-slate-300 max-w-[660px] mx-auto text-pretty leading-relaxed">
             Superficial AI interviewers only ask textbook trivia. NexHire cross examines your actual project architecture, simulates strict viva pressure rounds, and calculates your true placement readiness score.
           </p>
 
-          {/* Single Primary Action Above the Fold - Strictly Gated */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          {/* Primary Action Buttons - Strictly Gated */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             {user ? (
               <>
                 <button
                   onClick={scrollToAudit}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-sm font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
                 >
                   <span>Audit your resume</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <Link
                   to="/dashboard"
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-sm font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-full gloss-btn-secondary text-sm font-semibold flex items-center justify-center gap-2"
                 >
                   <span>Candidate dashboard</span>
                 </Link>
@@ -311,14 +320,15 @@ export default function LandingPage() {
               <>
                 <Link
                   to="/login"
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-sm font-semibold flex items-center justify-center gap-2.5 shadow-[0_0_30px_rgba(16,185,129,0.45)]"
                 >
-                  <Lock className="w-4 h-4" />
+                  <Lock className="w-4 h-4 text-emerald-950" />
                   <span>Log in to start audit</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   to="/register"
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-sm font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-full gloss-btn-secondary text-sm font-semibold flex items-center justify-center gap-2"
                 >
                   <span>Create free account</span>
                 </Link>
@@ -326,40 +336,40 @@ export default function LandingPage() {
             )}
           </div>
 
-          {/* Proof Strip */}
-          <div className="mt-10 pt-6 border-t border-white/[0.08] max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
-            <div className="p-3 bg-[#181818] border border-white/[0.08] rounded-xl">
-              <span className="text-[11px] font-mono text-slate-400 block">ATS parse accuracy</span>
-              <span className="text-lg font-semibold text-white font-mono">94.2%</span>
+          {/* Proof Strip with Frosted Glass Panels */}
+          <div className="mt-14 pt-8 border-t border-white/[0.08] max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+            <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
+              <span className="text-[11px] font-mono text-slate-400 block mb-1">ATS parse accuracy</span>
+              <span className="text-2xl font-bold text-white font-mono tracking-tight">94.2%</span>
             </div>
-            <div className="p-3 bg-[#181818] border border-white/[0.08] rounded-xl">
-              <span className="text-[11px] font-mono text-slate-400 block">Viva question bank</span>
-              <span className="text-lg font-semibold text-emerald-400 font-mono">7 rounds</span>
+            <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
+              <span className="text-[11px] font-mono text-slate-400 block mb-1">Viva question bank</span>
+              <span className="text-2xl font-bold text-emerald-400 font-mono tracking-tight">7 rounds</span>
             </div>
-            <div className="p-3 bg-[#181818] border border-white/[0.08] rounded-xl">
-              <span className="text-[11px] font-mono text-slate-400 block">Evaluated rubrics</span>
-              <span className="text-lg font-semibold text-white font-mono">1,200+</span>
+            <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
+              <span className="text-[11px] font-mono text-slate-400 block mb-1">Evaluated rubrics</span>
+              <span className="text-2xl font-bold text-white font-mono tracking-tight">1,200+</span>
             </div>
-            <div className="p-3 bg-[#181818] border border-white/[0.08] rounded-xl">
-              <span className="text-[11px] font-mono text-slate-400 block">Average score lift</span>
-              <span className="text-lg font-semibold text-emerald-400 font-mono">+28 pts</span>
+            <div className="p-4 gloss-panel-raised rounded-2xl border border-white/[0.12] gloss-card-hover">
+              <span className="text-[11px] font-mono text-slate-400 block mb-1">Average score lift</span>
+              <span className="text-2xl font-bold text-emerald-400 font-mono tracking-tight">+28 pts</span>
             </div>
           </div>
 
-          {/* Hero Visual: Interactive Product Simulator */}
-          <div className="mt-14 bg-[#181818] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl text-left">
+          {/* Hero Visual: Professional Glossy Product Simulator */}
+          <div className="mt-16 gloss-panel rounded-3xl overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.7)] border border-white/[0.16] text-left">
             
-            {/* Simulator Window Header */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-2.5 bg-[#1F1F1F] overflow-x-auto gap-2">
+            {/* macOS Style Frosted Chrome Header */}
+            <div className="flex items-center justify-between border-b border-white/[0.1] px-5 py-3.5 bg-white/[0.03] backdrop-blur-md overflow-x-auto gap-3">
               <div className="flex items-center gap-2 shrink-0">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
-                <span className="ml-2 font-mono text-[11px] text-slate-400">nexhire terminal v2.0</span>
+                <span className="w-3 h-3 rounded-full bg-rose-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]"></span>
+                <span className="w-3 h-3 rounded-full bg-amber-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]"></span>
+                <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]"></span>
+                <span className="ml-3 font-mono text-[11px] text-slate-400 font-medium">nexhire terminal v2.0 • placement ready</span>
               </div>
 
-              {/* Simulator Tabs */}
-              <div className="flex items-center gap-1 shrink-0">
+              {/* Glossy Tab Switcher */}
+              <div className="flex items-center gap-1.5 shrink-0 bg-black/40 p-1 rounded-xl border border-white/[0.08]">
                 {[
                   { id: 'defense', label: '1. Project defense viva', icon: Terminal },
                   { id: 'claims', label: '2. Claim verification', icon: ShieldCheck },
@@ -373,10 +383,10 @@ export default function LandingPage() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors duration-200 ease-snappy ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all duration-200 ease-snappy ${
                         isActive
-                          ? 'bg-[#272727] text-white border border-white/[0.08]'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-gradient-to-b from-white/15 to-white/5 text-white border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.4)]'
+                          : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />
@@ -387,50 +397,50 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Simulator Content Body */}
-            <div className="p-6 sm:p-8 bg-[#141415] min-h-[380px]">
+            {/* Simulator Interactive Body with Glass Cards */}
+            <div className="p-6 sm:p-9 bg-black/30 backdrop-blur-xl min-h-[400px]">
               
               {/* TAB 1: PROJECT DEFENSE SIMULATOR */}
               {activeTab === 'defense' && (
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 flex-wrap gap-2">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5 flex-wrap gap-2">
                     <div>
-                      <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider">Round 5 of 7 • Architectural Tradeoff Inquiries</span>
-                      <h3 className="text-sm font-semibold text-white">Project: High throughput microservice data pipeline</h3>
+                      <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Round 5 of 7 • Architectural Tradeoff Inquiries</span>
+                      <h3 className="text-base font-semibold text-white mt-0.5">Project: High throughput microservice data pipeline</h3>
                     </div>
-                    <span className="px-2.5 py-1 rounded-md text-[10px] font-mono bg-[#272727] text-slate-300 border border-white/[0.08]">
-                      Strict examiner mode
+                    <span className="px-3 py-1 rounded-full text-[10px] font-mono gloss-pill text-emerald-300 font-medium">
+                      Strict examiner mode active
                     </span>
                   </div>
 
-                  <div className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                      <span>AI Examiner Question:</span>
+                  <div className="gloss-panel-raised rounded-2xl p-5 space-y-2.5 border border-white/[0.14]">
+                    <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                      <span className="font-semibold">AI Technical Examiner Question:</span>
                     </div>
-                    <p className="text-xs text-white leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-100 leading-relaxed font-normal">
                       "You claimed you chose FastAPI and PostgreSQL to reduce 99th percentile response latency by 38 percent. Why did you select PostgreSQL over a document store given the write volume, and how did you prevent database connection pool exhaustion under sudden traffic spikes?"
                     </p>
                   </div>
 
-                  <div className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 space-y-3">
-                    <span className="text-[11px] font-mono text-slate-400 uppercase">Live evaluation rubrics</span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                      <div className="p-2.5 rounded-lg bg-[#272727] border border-white/[0.08]">
+                  <div className="gloss-panel-raised rounded-2xl p-5 space-y-3.5 border border-white/[0.14]">
+                    <span className="text-[11px] font-mono text-slate-400 uppercase font-medium">Live architectural rubrics</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-xs">
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08] gloss-card-hover">
                         <span className="text-slate-400 block text-[10px]">Architecture</span>
-                        <span className="font-mono text-emerald-400 text-sm font-semibold">84%</span>
+                        <span className="font-mono text-emerald-400 text-base font-bold">84%</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-[#272727] border border-white/[0.08]">
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08] gloss-card-hover">
                         <span className="text-slate-400 block text-[10px]">Technical depth</span>
-                        <span className="font-mono text-emerald-400 text-sm font-semibold">89%</span>
+                        <span className="font-mono text-emerald-400 text-base font-bold">89%</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-[#272727] border border-white/[0.08]">
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08] gloss-card-hover">
                         <span className="text-slate-400 block text-[10px]">Justification</span>
-                        <span className="font-mono text-white text-sm font-semibold">78%</span>
+                        <span className="font-mono text-white text-base font-bold">78%</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-[#272727] border border-white/[0.08]">
-                        <span className="text-slate-400 block text-[10px]">Overall viva rating</span>
-                        <span className="font-mono text-emerald-400 text-sm font-semibold">84 of 100</span>
+                      <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08] gloss-card-hover">
+                        <span className="text-slate-400 block text-[10px]">Overall viva score</span>
+                        <span className="font-mono text-emerald-400 text-base font-bold">84 / 100</span>
                       </div>
                     </div>
                   </div>
@@ -438,9 +448,9 @@ export default function LandingPage() {
                   <div className="flex justify-end pt-2">
                     <button
                       onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense Viva')}
-                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                      className="gloss-btn-primary px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 shadow-sm"
                     >
-                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
+                      {!user && <Lock className="w-3.5 h-3.5 text-emerald-950" />}
                       <span>Launch full seven round project defense</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -450,35 +460,35 @@ export default function LandingPage() {
 
               {/* TAB 2: CLAIM VERIFICATION SIMULATOR */}
               {activeTab === 'claims' && (
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 flex-wrap gap-2">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5 flex-wrap gap-2">
                     <div>
-                      <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Detected resume claim</span>
-                      <h3 className="text-sm font-semibold text-white">"Engineered distributed caching layer in Redis reducing DB load by 45 percent"</h3>
+                      <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Detected resume claim</span>
+                      <h3 className="text-base font-semibold text-white mt-0.5">"Engineered distributed caching layer in Redis reducing DB load by 45 percent"</h3>
                     </div>
-                    <span className="px-2.5 py-1 rounded-md text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold shadow-[0_0_12px_rgba(16,185,129,0.2)]">
                       Confidence score: 86%
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 space-y-2">
-                      <span className="text-[11px] font-mono text-slate-400 block uppercase">1. Technical probe</span>
-                      <p className="text-slate-200">How did you handle cache invalidation and prevent stale data reads when writing updates?</p>
+                    <div className="gloss-panel-raised rounded-2xl p-5 space-y-2 border border-white/[0.14]">
+                      <span className="text-[11px] font-mono text-emerald-400 block uppercase font-semibold">1. Technical probe</span>
+                      <p className="text-slate-200 leading-relaxed">How did you handle cache invalidation and prevent stale data reads when writing updates?</p>
                     </div>
-                    <div className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 space-y-2">
-                      <span className="text-[11px] font-mono text-slate-400 block uppercase">2. Architectural tradeoff</span>
-                      <p className="text-slate-200">What eviction policy (LRU, LFU, TTL) did you configure and what was the memory footprint?</p>
+                    <div className="gloss-panel-raised rounded-2xl p-5 space-y-2 border border-white/[0.14]">
+                      <span className="text-[11px] font-mono text-emerald-400 block uppercase font-semibold">2. Architectural tradeoff</span>
+                      <p className="text-slate-200 leading-relaxed">What eviction policy (LRU, LFU, TTL) did you configure and what was the memory footprint?</p>
                     </div>
                   </div>
 
-                  <div className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 flex items-center justify-between text-xs flex-wrap gap-2">
+                  <div className="gloss-panel-raised rounded-2xl p-4 flex items-center justify-between text-xs flex-wrap gap-3 border border-white/[0.14]">
                     <span className="text-slate-300">Diagnosis: High technical validity. Candidate demonstrated clear cache stampede prevention.</span>
                     <button
                       onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
-                      className="text-emerald-400 hover:text-emerald-300 font-mono text-xs flex items-center gap-1"
+                      className="gloss-btn-primary px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5"
                     >
-                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
+                      {!user && <Lock className="w-3.5 h-3.5 text-emerald-950" />}
                       <span>Verify all claims</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -488,28 +498,30 @@ export default function LandingPage() {
 
               {/* TAB 3: PRESSURE INTERVIEW SIMULATOR */}
               {activeTab === 'pressure' && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 flex-wrap gap-2">
-                    <div className="flex items-center gap-2">
-                      <Flame className="w-4 h-4 text-amber-400" />
-                      <h3 className="text-sm font-semibold text-white">Pressure mode interview simulation</h3>
+                <div className="space-y-5">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5 flex-wrap gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                        <Flame className="w-4 h-4" />
+                      </div>
+                      <h3 className="text-base font-semibold text-white">Pressure mode interview simulation</h3>
                     </div>
-                    <span className="font-mono text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-md">
+                    <span className="font-mono text-xs text-amber-300 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-full font-bold shadow-[0_0_12px_rgba(245,158,11,0.2)]">
                       Timer: 00:45
                     </span>
                   </div>
 
-                  <div className="space-y-3 text-xs">
-                    <div className="bg-[#181818] border border-white/[0.08] p-3.5 rounded-xl text-slate-300">
+                  <div className="space-y-3.5 text-xs">
+                    <div className="gloss-panel-raised p-4 rounded-2xl text-slate-200 border border-white/[0.12]">
                       <strong className="text-slate-400 font-mono block text-[10px] mb-1">AI Interviewer:</strong>
                       "You mentioned you understand database indexing. What is the fundamental difference between a clustered and non clustered index in PostgreSQL?"
                     </div>
-                    <div className="bg-[#272727] border border-white/[0.08] p-3.5 rounded-xl text-white ml-4">
-                      <strong className="text-emerald-400 font-mono block text-[10px] mb-1">Candidate Answer:</strong>
+                    <div className="bg-emerald-500/10 border border-emerald-500/25 p-4 rounded-2xl text-white ml-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                      <strong className="text-emerald-400 font-mono block text-[10px] mb-1 font-semibold">Candidate Answer:</strong>
                       "A clustered index dictates physical row ordering on disk, while a non clustered index stores a separate pointer structure pointing to the heap."
                     </div>
-                    <div className="bg-[#181818] border border-amber-500/20 p-3.5 rounded-xl text-amber-300">
-                      <strong className="text-amber-400 font-mono block text-[10px] mb-1">Strict Pressure Follow up:</strong>
+                    <div className="bg-amber-500/10 border border-amber-500/25 p-4 rounded-2xl text-amber-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                      <strong className="text-amber-400 font-mono block text-[10px] mb-1 font-semibold">Strict Pressure Follow up:</strong>
                       "That is standard textbook definition. Now explain what happens to write throughput when you attach five non clustered indexes to a high write table. Quantify the disk input output cost."
                     </div>
                   </div>
@@ -517,9 +529,9 @@ export default function LandingPage() {
                   <div className="flex justify-end pt-1">
                     <button
                       onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
-                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                      className="gloss-btn-primary px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2"
                     >
-                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
+                      {!user && <Lock className="w-3.5 h-3.5 text-emerald-950" />}
                       <span>Launch pressure interview session</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -529,39 +541,39 @@ export default function LandingPage() {
 
               {/* TAB 4: WEAKNESS RADAR SIMULATOR */}
               {activeTab === 'radar' && (
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 flex-wrap gap-2">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5 flex-wrap gap-2">
                     <div>
-                      <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Candidate evaluation</span>
-                      <h3 className="text-sm font-semibold text-white">Placement readiness index: 78 of 100</h3>
+                      <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Candidate evaluation</span>
+                      <h3 className="text-base font-semibold text-white mt-0.5">Placement readiness index: 78 of 100</h3>
                     </div>
-                    <span className="font-mono text-xs text-slate-300 bg-[#272727] border border-white/[0.08] px-2.5 py-1 rounded-md">
+                    <span className="font-mono text-xs text-slate-300 gloss-pill px-3 py-1 rounded-full font-medium">
                       Seven core competencies
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-                    <div className="p-3 rounded-xl bg-[#181818] border border-white/[0.08]">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-xs font-mono">
+                    <div className="p-4 rounded-2xl gloss-panel-raised border border-white/[0.12] gloss-card-hover">
                       <span className="text-slate-400 block text-[10px]">Data structures</span>
-                      <span className="text-rose-400 text-sm font-semibold">44%</span>
+                      <span className="text-rose-400 text-lg font-bold">44%</span>
                     </div>
-                    <div className="p-3 rounded-xl bg-[#181818] border border-white/[0.08]">
+                    <div className="p-4 rounded-2xl gloss-panel-raised border border-white/[0.12] gloss-card-hover">
                       <span className="text-slate-400 block text-[10px]">SQL querying</span>
-                      <span className="text-amber-400 text-sm font-semibold">63%</span>
+                      <span className="text-amber-400 text-lg font-bold">63%</span>
                     </div>
-                    <div className="p-3 rounded-xl bg-[#181818] border border-white/[0.08]">
+                    <div className="p-4 rounded-2xl gloss-panel-raised border border-white/[0.12] gloss-card-hover">
                       <span className="text-slate-400 block text-[10px]">Technical viva</span>
-                      <span className="text-emerald-400 text-sm font-semibold">82%</span>
+                      <span className="text-emerald-400 text-lg font-bold">82%</span>
                     </div>
-                    <div className="p-3 rounded-xl bg-[#181818] border border-white/[0.08]">
+                    <div className="p-4 rounded-2xl gloss-panel-raised border border-white/[0.12] gloss-card-hover">
                       <span className="text-slate-400 block text-[10px]">Backend architecture</span>
-                      <span className="text-emerald-400 text-sm font-semibold">86%</span>
+                      <span className="text-emerald-400 text-lg font-bold">86%</span>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#181818] border border-white/[0.08] space-y-2 text-xs">
-                    <span className="text-[11px] font-mono text-emerald-400 uppercase">AI diagnostic remediation plan</span>
-                    <p className="text-slate-300">
+                  <div className="p-5 rounded-2xl gloss-panel-raised border border-white/[0.12] space-y-2 text-xs">
+                    <span className="text-[11px] font-mono text-emerald-400 uppercase font-semibold">AI diagnostic remediation plan</span>
+                    <p className="text-slate-200 leading-relaxed">
                       Weakness identified in <strong className="text-white">HashMaps and Graph Traversals</strong> (44 percent). Seven day targeted drill generated: Day 1 HashMap internal mechanics, Day 3 Two Sum variants, Day 6 Timed assessment.
                     </p>
                   </div>
@@ -569,9 +581,9 @@ export default function LandingPage() {
                   <div className="flex justify-end pt-1">
                     <button
                       onClick={() => handleProtectedNavigation('/dashboard', 'Weakness Radar')}
-                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                      className="gloss-btn-primary px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2"
                     >
-                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
+                      {!user && <Lock className="w-3.5 h-3.5 text-emerald-950" />}
                       <span>Open full weakness radar on dashboard</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -581,17 +593,17 @@ export default function LandingPage() {
 
               {/* TAB 5: RESUME STUDIO PREVIEW */}
               {activeTab === 'templates' && (
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 flex-wrap gap-2">
-                    <h3 className="text-sm font-semibold text-white">Four enterprise ATS optimized resume templates</h3>
-                    <div className="flex items-center gap-1">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3.5 flex-wrap gap-2">
+                    <h3 className="text-base font-semibold text-white">Four enterprise ATS optimized resume templates</h3>
+                    <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/[0.08]">
                       {['modern', 'executive', 'split', 'minimalist'].map((t) => (
                         <button
                           key={t}
                           onClick={() => setActiveTemplatePreview(t)}
-                          className={`px-3 py-1 rounded-md text-xs font-mono capitalize transition-colors duration-200 ease-snappy ${
+                          className={`px-3 py-1 rounded-lg text-xs font-mono capitalize transition-all duration-200 ease-snappy ${
                             activeTemplatePreview === t
-                              ? 'bg-[#272727] text-white border border-white/[0.08]'
+                              ? 'bg-gradient-to-b from-white/20 to-white/5 text-white border border-white/20 shadow-sm'
                               : 'text-slate-400 hover:text-white'
                           }`}
                         >
@@ -601,12 +613,12 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  <div className="bg-white text-slate-900 p-6 rounded-xl text-xs space-y-2.5 max-h-60 overflow-hidden border border-slate-200">
-                    <div className="border-b border-slate-200 pb-2 flex justify-between items-baseline">
-                      <span className="font-bold text-base text-slate-950">ALEX JOHNSON</span>
-                      <span className="text-[11px] font-mono text-slate-600">SENIOR SOFTWARE ENGINEER</span>
+                  <div className="bg-white text-slate-900 p-7 rounded-2xl text-xs space-y-3 max-h-64 overflow-hidden border border-slate-200 shadow-2xl">
+                    <div className="border-b border-slate-200 pb-2.5 flex justify-between items-baseline">
+                      <span className="font-bold text-base text-slate-950 tracking-tight">ALEX JOHNSON</span>
+                      <span className="text-[11px] font-mono text-slate-600 font-semibold">SENIOR SOFTWARE ENGINEER</span>
                     </div>
-                    <p className="text-[11px] text-slate-700">
+                    <p className="text-[11px] text-slate-700 font-medium">
                       Format: {activeTemplatePreview.toUpperCase()} • Clean linear vector typography • 100 percent Workday and Greenhouse parse compatibility.
                     </p>
                     <div className="text-[11px] text-slate-800">
@@ -620,9 +632,9 @@ export default function LandingPage() {
                   <div className="flex justify-end pt-1">
                     <button
                       onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
-                      className="text-xs text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1.5"
+                      className="gloss-btn-primary px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2"
                     >
-                      {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
+                      {!user && <Lock className="w-3.5 h-3.5 text-emerald-950" />}
                       <span>Customize and export in resume studio</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
@@ -637,75 +649,75 @@ export default function LandingPage() {
         {/* Section 2: B11 Mandatory Tagline Reveal Section */}
         <TaglineReveal text="Most software engineers do not fail technical interviews because of basic syntax. They fail when an interviewer drills into an undefended project claim. NexHire tests your actual architectural depth before you sit in front of the hiring committee." />
 
-        {/* Section 3: Problem to Solution Contrast */}
-        <section className="px-6 py-16 max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2">The engineering difference</span>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white text-balance">
+        {/* Section 3: Problem to Solution Contrast (Glossy Split) */}
+        <section className="px-6 py-20 max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">The engineering difference</span>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               Why generic AI mock interviewers fail serious candidates
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
             
-            {/* The Old Way */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 sm:p-8 space-y-5">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
-                  <AlertTriangle className="w-4 h-4" />
+            {/* The Old Way: Smoky Glass Card */}
+            <div className="gloss-panel rounded-3xl p-7 sm:p-9 space-y-6 border border-rose-500/20 gloss-card-hover">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                  <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-white">Generic AI tools and basic prompt wrappers</h3>
+                  <h3 className="text-base font-semibold text-white">Generic AI tools and basic prompt wrappers</h3>
                   <span className="text-xs text-slate-400">Surface level interview prep</span>
                 </div>
               </div>
 
-              <ul className="space-y-3 text-xs text-slate-300">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-rose-400 mt-0.5">✕</span>
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-rose-400 mt-0.5 font-bold">✕</span>
                   <span>Superficial textbook trivia questions that any candidate can recite from memory.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-rose-400 mt-0.5">✕</span>
+                <li className="flex items-start gap-3">
+                  <span className="text-rose-400 mt-0.5 font-bold">✕</span>
                   <span>Zero verification of metrics or architecture claims written on your resume.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-rose-400 mt-0.5">✕</span>
+                <li className="flex items-start gap-3">
+                  <span className="text-rose-400 mt-0.5 font-bold">✕</span>
                   <span>Generic score percentages that give false confidence without actionable remediation.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-rose-400 mt-0.5">✕</span>
+                <li className="flex items-start gap-3">
+                  <span className="text-rose-400 mt-0.5 font-bold">✕</span>
                   <span>Leaves you completely vulnerable when real interviewers ask deep "Why" questions.</span>
                 </li>
               </ul>
             </div>
 
-            {/* The NexHire Placement Engine Way */}
-            <div className="bg-[#181818] border border-emerald-500/30 rounded-2xl p-6 sm:p-8 space-y-5">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                  <CheckCircle2 className="w-4 h-4" />
+            {/* The NexHire Placement Engine Way: Emerald Glossy Glass Card */}
+            <div className="gloss-panel rounded-3xl p-7 sm:p-9 space-y-6 border border-emerald-500/40 gloss-card-hover shadow-[0_0_35px_rgba(16,185,129,0.15)]">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.35)]">
+                  <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-white">NexHire Placement Readiness Engine</h3>
-                  <span className="text-xs text-emerald-400">Calibrated architectural defense</span>
+                  <h3 className="text-base font-semibold text-white">NexHire Placement Readiness Engine</h3>
+                  <span className="text-xs text-emerald-400 font-medium">Calibrated architectural defense</span>
                 </div>
               </div>
 
-              <ul className="space-y-3 text-xs text-slate-200">
-                <li className="flex items-start gap-2.5">
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-200">
+                <li className="flex items-start gap-3">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span><strong>Seven round project viva</strong> that interrogates database choice, cache invalidation, and failure modes.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
+                <li className="flex items-start gap-3">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span><strong>Automated claim verification</strong> that inspects every bullet point for defensible technical evidence.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
+                <li className="flex items-start gap-3">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span><strong>Strict pressure interview mode</strong> challenging theoretical responses with real disk input output costs.</span>
                 </li>
-                <li className="flex items-start gap-2.5">
+                <li className="flex items-start gap-3">
                   <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span><strong>Calibrated placement readiness index</strong> giving an honest 0 to 100 rating with a personalized drill plan.</span>
                 </li>
@@ -716,19 +728,19 @@ export default function LandingPage() {
         </section>
 
         {/* Section 4: Benefits Grid (Four Outcome-Driven Bullets) */}
-        <section className="px-6 py-16 max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2">Core outcomes</span>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white text-balance">
+        <section className="px-6 py-20 max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">Core outcomes</span>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               Engineered to eliminate candidate vulnerability
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-5 space-y-3">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <ShieldCheck className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+                <ShieldCheck className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Bulletproof claim verification</h3>
               <p className="text-xs text-slate-400 leading-relaxed text-pretty">
@@ -736,9 +748,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-5 space-y-3">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Terminal className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+                <Terminal className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Seven round viva defense</h3>
               <p className="text-xs text-slate-400 leading-relaxed text-pretty">
@@ -746,9 +758,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-5 space-y-3">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Compass className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+                <Compass className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Targeted seven day remediation</h3>
               <p className="text-xs text-slate-400 leading-relaxed text-pretty">
@@ -756,9 +768,9 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-5 space-y-3">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Layout className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-6 space-y-3.5 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-emerald-400 shadow-sm">
+                <Layout className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-semibold text-white">Enterprise ATS fidelity</h3>
               <p className="text-xs text-slate-400 leading-relaxed text-pretty">
@@ -769,52 +781,52 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 5: How It Works (Three Steps) */}
-        <section className="px-6 py-16 max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2">Process</span>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white text-balance">
+        {/* Section 5: How It Works (Three Distinct Steps) */}
+        <section className="px-6 py-20 max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">Process</span>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               How the placement readiness engine works
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-xs font-mono font-semibold text-emerald-400">
+                <span className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 shadow-inner">
                   01
                 </span>
                 <span className="text-[11px] font-mono text-slate-400">Intake</span>
               </div>
-              <h3 className="text-sm font-semibold text-white">Upload your resume or paste projects</h3>
-              <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+              <h3 className="text-base font-semibold text-white">Upload your resume or paste projects</h3>
+              <p className="text-xs text-slate-300 leading-relaxed text-pretty">
                 NexHire parses your technical experience, detects bold performance assertions, and flags claims that lack architectural justification.
               </p>
             </div>
 
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-xs font-mono font-semibold text-emerald-400">
+                <span className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 shadow-inner">
                   02
                 </span>
                 <span className="text-[11px] font-mono text-slate-400">Simulation</span>
               </div>
-              <h3 className="text-sm font-semibold text-white">Face adaptive viva and pressure rounds</h3>
-              <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+              <h3 className="text-base font-semibold text-white">Face adaptive viva and pressure rounds</h3>
+              <p className="text-xs text-slate-300 leading-relaxed text-pretty">
                 AI examiners probe your project design decisions, verify claim authenticity, and test your poise when answers are challenged.
               </p>
             </div>
 
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-xs font-mono font-semibold text-emerald-400">
+                <span className="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 shadow-inner">
                   03
                 </span>
                 <span className="text-[11px] font-mono text-slate-400">Readiness</span>
               </div>
-              <h3 className="text-sm font-semibold text-white">Receive calibrated index and drill plan</h3>
-              <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+              <h3 className="text-base font-semibold text-white">Receive calibrated index and drill plan</h3>
+              <p className="text-xs text-slate-300 leading-relaxed text-pretty">
                 Get an objective 0 to 100 score across seven competencies with an automated daily curriculum to close identified weaknesses.
               </p>
             </div>
@@ -823,30 +835,30 @@ export default function LandingPage() {
         </section>
 
         {/* Section 6: Deep Feature Bento Grid */}
-        <section className="px-6 py-16 max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2">Technical depth</span>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white text-balance">
+        <section className="px-6 py-20 max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block mb-2 font-semibold">Technical depth</span>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white gloss-heading-silver text-balance">
               Eight comprehensive placement readiness modules
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Bento Card 1: Project Defense Viva */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Terminal className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+                <Terminal className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Project Defense Viva</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed text-pretty">
+                <h3 className="text-base font-semibold text-white">Project Defense Viva</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed text-pretty">
                   Seven round technical inquiry scrutinizing database selection, latency tradeoffs, edge cases, and architectural justifications.
                 </p>
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/project-defense', 'Project Defense')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Start defense session</span>
@@ -855,19 +867,19 @@ export default function LandingPage() {
             </div>
 
             {/* Bento Card 2: Resume Claim Verification */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <ShieldCheck className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+                <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Resume Claim Verification</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed text-pretty">
+                <h3 className="text-base font-semibold text-white">Resume Claim Verification</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed text-pretty">
                   Scans bullet points for metric inflation and generates targeted cross examination questions to verify actual ownership.
                 </p>
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/resume-claim-verification', 'Claim Verification')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Scan resume claims</span>
@@ -876,19 +888,19 @@ export default function LandingPage() {
             </div>
 
             {/* Bento Card 3: Pressure Interview Mode */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-amber-400">
-                <Flame className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm">
+                <Flame className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Pressure Interview Mode</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed text-pretty">
+                <h3 className="text-base font-semibold text-white">Pressure Interview Mode</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed text-pretty">
                   Simulates intense interviewer pushback, questioning standard answers and measuring composure under timed constraints.
                 </p>
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/mock-interview', 'Pressure Mode')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Enter pressure mode</span>
@@ -897,19 +909,19 @@ export default function LandingPage() {
             </div>
 
             {/* Bento Card 4: Weakness Radar */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Compass className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+                <Compass className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Weakness Radar and Retesting</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed text-pretty">
+                <h3 className="text-base font-semibold text-white">Weakness Radar and Retesting</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed text-pretty">
                   Tracks competency across algorithms, system design, and communication, displaying quantifiable score improvements over time.
                 </p>
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/dashboard', 'Weakness Radar')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>View readiness radar</span>
@@ -918,19 +930,19 @@ export default function LandingPage() {
             </div>
 
             {/* Bento Card 5: Target Company Prep */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Target className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+                <Target className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Target Company Alignment</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed text-pretty">
+                <h3 className="text-base font-semibold text-white">Target Company Alignment</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed text-pretty">
                   Aligns your technical prep against specific interview formats used by Google, Amazon, Microsoft, and high scale startups.
                 </p>
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/company-prep', 'Target Company Prep')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Select target company</span>
@@ -939,19 +951,19 @@ export default function LandingPage() {
             </div>
 
             {/* Bento Card 6: Resume Studio Formats */}
-            <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 space-y-4">
-              <div className="w-8 h-8 rounded-lg bg-[#272727] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-                <Layout className="w-4 h-4" />
+            <div className="gloss-panel rounded-3xl p-7 space-y-4 border border-white/[0.12] gloss-card-hover">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+                <Layout className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">ATS Resume Studio</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed text-pretty">
+                <h3 className="text-base font-semibold text-white">ATS Resume Studio</h3>
+                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed text-pretty">
                   Four engineered templates built with linear headings and vector glyph typography for perfect ATS parsing.
                 </p>
               </div>
               <button
                 onClick={() => handleProtectedNavigation('/resume-builder', 'Resume Studio')}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1.5 pt-1"
               >
                 {!user && <Lock className="w-3.5 h-3.5 text-slate-500" />}
                 <span>Open resume studio</span>
@@ -962,26 +974,28 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 7: Dropzone Upload Section (STRICTLY AUTHENTICATED) */}
-        <section id="audit-section" className="px-6 py-16 max-w-4xl mx-auto">
-          <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-6 sm:p-10 space-y-6">
+        {/* Section 7: Dropzone Upload Section (STRICTLY AUTHENTICATED & GLOSSY) */}
+        <section id="audit-section" className="px-6 py-20 max-w-4xl mx-auto">
+          <div className="gloss-panel rounded-3xl p-8 sm:p-12 space-y-7 border border-white/[0.16] shadow-[0_24px_50px_rgba(0,0,0,0.6)]">
             
             {user ? (
               /* AUTHENTICATED STATE: USER IS SIGNED IN */
               <>
-                <div className="text-center space-y-1.5 max-w-lg mx-auto">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-400 mb-1">
-                    <Check className="w-3.5 h-3.5" />
+                <div className="text-center space-y-2 max-w-lg mx-auto">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-xs font-mono text-emerald-300 mb-1 font-medium shadow-sm">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Signed in as {user.name || user.email}</span>
                   </div>
-                  <h2 className="text-2xl font-semibold text-white tracking-tight">Audit your resume for interview vulnerabilities</h2>
-                  <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight gloss-heading-silver">
+                    Audit your resume for interview vulnerabilities
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed text-pretty">
                     Upload your resume in PDF or DOCX format to receive an instant analysis of claim risks, keyword coverage, and ATS parsing readiness.
                   </p>
                 </div>
 
                 {/* Drag and Drop Zone for Authenticated Users */}
-                <div className="border border-dashed border-white/[0.12] hover:border-emerald-500/50 rounded-xl p-8 text-center transition-colors duration-300 ease-snappy bg-[#141415] relative group cursor-pointer">
+                <div className="border border-dashed border-white/[0.2] hover:border-emerald-400/60 rounded-2xl p-9 text-center transition-all duration-300 ease-snappy bg-black/40 backdrop-blur-md relative group cursor-pointer shadow-inner">
                   <input
                     id="landing-resume-file-input"
                     type="file"
@@ -989,18 +1003,18 @@ export default function LandingPage() {
                     onChange={handleFileChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
-                  <div className="w-10 h-10 rounded-lg bg-[#272727] border border-white/[0.08] text-slate-300 mx-auto flex items-center justify-center mb-3">
-                    <Upload className="w-4 h-4 text-emerald-400" />
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.08] border border-white/[0.15] text-slate-300 mx-auto flex items-center justify-center mb-3.5 shadow-sm group-hover:scale-105 transition-transform">
+                    <Upload className="w-5 h-5 text-emerald-400" />
                   </div>
                   {file ? (
-                    <div className="space-y-1">
-                      <p className="text-xs font-mono text-emerald-400 font-semibold">{file.name}</p>
+                    <div className="space-y-1.5">
+                      <p className="text-sm font-mono text-emerald-400 font-bold">{file.name}</p>
                       <p className="text-[11px] text-slate-400 font-mono">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready to audit</p>
                     </div>
                   ) : (
-                    <div className="space-y-1">
-                      <p className="text-xs text-slate-200 font-medium">
-                        Drop your resume here, or <span className="text-emerald-400 underline">browse files</span>
+                    <div className="space-y-1.5">
+                      <p className="text-sm text-slate-200 font-medium">
+                        Drop your resume here, or <span className="text-emerald-400 underline font-semibold">browse files</span>
                       </p>
                       <p className="text-[11px] text-slate-400 font-mono">PDF or DOCX up to 10MB</p>
                     </div>
@@ -1011,68 +1025,68 @@ export default function LandingPage() {
                 <button
                   onClick={handleUploadAndAnalyze}
                   disabled={loading}
-                  className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs flex items-center justify-center gap-2 transition-colors duration-300 ease-snappy shadow-sm active:scale-[0.98]"
+                  className="w-full py-3.5 rounded-full gloss-btn-primary font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
                 >
                   {loading ? (
                     <>
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-emerald-950" />
                       <span>Evaluating resume claims...</span>
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <ShieldCheck className="w-4 h-4 text-emerald-950" />
                       <span>Run instant placement audit</span>
                     </>
                   )}
                 </button>
               </>
             ) : (
-              /* UNAUTHENTICATED STATE: LOGIN STRICTLY REQUIRED */
-              <div className="text-center space-y-5 max-w-lg mx-auto py-4">
-                <div className="w-12 h-12 rounded-xl bg-[#272727] border border-white/[0.08] text-amber-400 mx-auto flex items-center justify-center">
-                  <Lock className="w-6 h-6" />
+              /* UNAUTHENTICATED STATE: LOGIN STRICTLY REQUIRED (GLOSSY LOCKED CARD) */
+              <div className="text-center space-y-6 max-w-lg mx-auto py-2">
+                <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.25)]">
+                  <Lock className="w-7 h-7 drop-shadow-sm" />
                 </div>
                 
                 <div className="space-y-2">
-                  <span className="text-xs font-mono text-amber-400 uppercase tracking-wider block">
+                  <span className="text-xs font-mono text-amber-400 uppercase tracking-wider block font-semibold">
                     Authentication required
                   </span>
-                  <h2 className="text-2xl font-semibold text-white tracking-tight">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight gloss-heading-silver">
                     Sign in to audit your resume
                   </h2>
-                  <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed text-pretty">
                     To protect candidate privacy and preserve your placement audit history, you must be logged in before uploading resumes or accessing technical modules.
                   </p>
                 </div>
 
-                {/* Locked Dropzone Placeholder */}
+                {/* Locked Dropzone Card */}
                 <div
                   onClick={() => {
                     addToast('Please sign in or create an account to upload resumes.', 'warning');
                     navigate('/login');
                   }}
-                  className="border border-dashed border-white/[0.12] hover:border-amber-400/50 rounded-xl p-8 text-center transition-colors duration-300 ease-snappy bg-[#141415] cursor-pointer space-y-2 group"
+                  className="border border-dashed border-white/[0.18] hover:border-amber-400/60 rounded-2xl p-9 text-center transition-all duration-300 ease-snappy bg-black/40 backdrop-blur-md cursor-pointer space-y-2 group shadow-inner"
                 >
-                  <Lock className="w-5 h-5 text-slate-500 group-hover:text-amber-400 mx-auto transition-colors" />
-                  <p className="text-xs text-slate-300 font-medium">
+                  <Lock className="w-6 h-6 text-slate-400 group-hover:text-amber-400 mx-auto transition-colors group-hover:scale-110 duration-200" />
+                  <p className="text-sm text-slate-200 font-semibold">
                     Upload locked for guest visitors
                   </p>
-                  <p className="text-[11px] text-slate-500 font-mono">
+                  <p className="text-xs text-slate-400 font-mono">
                     Click here to log in or register your candidate profile
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
                   <Link
                     to="/login"
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs flex items-center justify-center gap-2 transition-colors duration-300 ease-snappy shadow-sm active:scale-[0.98]"
+                    className="w-full sm:w-auto px-7 py-3 rounded-full gloss-btn-primary font-bold text-xs flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
                   >
-                    <LogIn className="w-3.5 h-3.5" />
+                    <LogIn className="w-3.5 h-3.5 text-emerald-950" />
                     <span>Log in to upload resume</span>
                   </Link>
                   <Link
                     to="/register"
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white font-semibold text-xs border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                    className="w-full sm:w-auto px-6 py-3 rounded-full gloss-btn-secondary font-semibold text-xs flex items-center justify-center gap-2"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
                     <span>Create free account</span>
@@ -1081,7 +1095,7 @@ export default function LandingPage() {
               </div>
             )}
 
-            {/* Security Points */}
+            {/* Security Guarantee Badges */}
             <div className="flex flex-wrap items-center justify-center gap-6 pt-2 text-[11px] text-slate-400 font-mono">
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -1101,14 +1115,14 @@ export default function LandingPage() {
         </section>
 
         {/* Section 8: FAQ Accordion (Seven Comprehensive Questions) */}
-        <section className="px-6 py-16 max-w-3xl mx-auto">
-          <div className="text-center space-y-1.5 mb-10">
-            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block">Common inquiries</span>
-            <h2 className="text-2xl font-semibold text-white tracking-tight">Frequently asked questions</h2>
-            <p className="text-xs text-slate-400">Everything you need to know about the placement readiness engine.</p>
+        <section className="px-6 py-20 max-w-3xl mx-auto">
+          <div className="text-center space-y-2 mb-12">
+            <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block font-semibold">Common inquiries</span>
+            <h2 className="text-3xl font-bold text-white tracking-tight gloss-heading-silver">Frequently asked questions</h2>
+            <p className="text-xs sm:text-sm text-slate-400">Everything you need to know about the placement readiness engine.</p>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {[
               {
                 q: "Why do I need to log in before uploading my resume?",
@@ -1141,10 +1155,10 @@ export default function LandingPage() {
             ].map((faq, idx) => {
               const isOpen = openFaqIndex === idx;
               return (
-                <div key={idx} className="bg-[#181818] border border-white/[0.08] rounded-xl p-4 space-y-2">
+                <div key={idx} className="gloss-panel rounded-2xl p-5 space-y-2 border border-white/[0.12] gloss-card-hover">
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
-                    className="w-full flex items-center justify-between text-left text-xs font-semibold text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 rounded"
+                    className="w-full flex items-center justify-between text-left text-xs sm:text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 rounded"
                   >
                     <span>{faq.q}</span>
                     {isOpen ? (
@@ -1154,7 +1168,7 @@ export default function LandingPage() {
                     )}
                   </button>
                   {isOpen && (
-                    <p className="text-xs text-slate-400 leading-relaxed pt-2 border-t border-white/[0.04] text-pretty">
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pt-2.5 border-t border-white/[0.08] text-pretty">
                       {faq.a}
                     </p>
                   )}
@@ -1164,33 +1178,37 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Section 9: Final High-Converting CTA - Strictly Gated */}
-        <section className="px-6 py-20 max-w-4xl mx-auto text-center">
-          <div className="bg-[#181818] border border-white/[0.08] rounded-2xl p-8 sm:p-12 space-y-6">
+        {/* Section 9: Final High-Converting Glossy CTA */}
+        <section className="px-6 py-24 max-w-4xl mx-auto text-center">
+          <div className="gloss-panel rounded-3xl p-9 sm:p-14 space-y-7 border border-white/[0.18] shadow-[0_32px_70px_rgba(0,0,0,0.7)] relative overflow-hidden">
             
-            <div className="space-y-2 max-w-xl mx-auto">
-              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block">Get placement ready</span>
-              <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight hero-heading-gradient">
+            {/* Ambient Conical Accent Inside Banner */}
+            <div className="absolute -top-24 -left-24 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div className="space-y-3 max-w-xl mx-auto relative z-10">
+              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider block font-semibold">Get placement ready</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight gloss-heading-silver">
                 Ready to turn resume claims into placement offers?
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed text-pretty">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed text-pretty">
                 Create your account or log in to discover vulnerable resume claims, test yourself against strict viva examiners, and benchmark your engineering readiness.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2 relative z-10">
               {user ? (
                 <>
                   <button
                     onClick={scrollToAudit}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
                   >
                     <span>Audit your resume</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                   <Link
                     to="/dashboard"
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-xs font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-full gloss-btn-secondary text-xs font-semibold flex items-center justify-center gap-2"
                   >
                     <span>Candidate dashboard</span>
                   </Link>
@@ -1199,14 +1217,14 @@ export default function LandingPage() {
                 <>
                   <Link
                     to="/login"
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full gloss-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(16,185,129,0.45)]"
                   >
-                    <LogIn className="w-3.5 h-3.5" />
+                    <LogIn className="w-3.5 h-3.5 text-emerald-950" />
                     <span>Log in to start audit</span>
                   </Link>
                   <Link
                     to="/register"
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#272727] hover:bg-[#313131] text-white text-xs font-semibold border border-white/[0.08] transition-colors duration-300 ease-snappy flex items-center justify-center gap-2 active:scale-[0.98]"
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-full gloss-btn-secondary text-xs font-semibold flex items-center justify-center gap-2"
                   >
                     <span>Create free account</span>
                   </Link>
@@ -1214,7 +1232,7 @@ export default function LandingPage() {
               )}
             </div>
 
-            <p className="text-[11px] text-slate-400 font-mono pt-2">
+            <p className="text-[11px] text-slate-400 font-mono pt-1 relative z-10">
               No credit card required • Instant analysis • Zero friction setup
             </p>
 
@@ -1223,13 +1241,13 @@ export default function LandingPage() {
 
       </main>
 
-      {/* Semantic Footer */}
-      <footer className="border-t border-white/[0.08] bg-[#141415] py-12 px-6">
+      {/* Semantic Frosted Glossy Footer */}
+      <footer className="border-t border-white/[0.08] bg-black/60 backdrop-blur-xl py-12 px-6 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-400">
           
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-[#181818] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <div className="w-8 h-8 rounded-xl bg-white/[0.08] border border-white/[0.14] flex items-center justify-center text-emerald-400 shadow-sm">
+              <ShieldCheck className="w-4 h-4" />
             </div>
             <div className="space-y-0.5">
               <p className="font-semibold text-white">NexHire AI</p>
