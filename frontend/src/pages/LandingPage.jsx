@@ -190,19 +190,23 @@ export default function LandingPage() {
       <main id="main-content">
         
         {/* HERO SECTION */}
-        <section className="relative px-6 pt-16 sm:pt-24 pb-20 max-w-6xl mx-auto text-center">
+        <section className="relative px-6 pt-16 sm:pt-24 pb-20 max-w-6xl mx-auto text-center overflow-hidden">
           
+          {/* Subtle Ambient Illumination */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-gradient-to-b from-indigo-500/15 via-blue-500/5 to-transparent blur-[120px] pointer-events-none -z-10" />
+
           <div className="max-w-3xl mx-auto space-y-6">
             
             {/* Tag / Category Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs font-medium text-slate-300">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] text-xs font-medium text-slate-300 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
               <span>Software Engineering Interview & Career Preparation</span>
             </div>
 
-            {/* Clear, Professional Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-              Master technical interviews with structured practice.
+            {/* Clear, Editorial Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.14]">
+              <span>Master technical interviews</span>
+              <span className="block text-slate-400 font-medium mt-1">with structured practice.</span>
             </h1>
 
             {/* Honest, Clear Subheadline */}
@@ -420,7 +424,15 @@ export default function LandingPage() {
                       <CheckCircle className="w-4 h-4 text-emerald-400" />
                       <span className="text-white font-medium">All 18 automated test cases passed</span>
                     </div>
-                    <span className="font-mono text-slate-400">Execution time: 38ms</span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-slate-400 text-[11px]">38ms latency</span>
+                      <button
+                        onClick={() => addToast('Executing unit tests... 18/18 passed in 38ms.', 'success')}
+                        className="px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-[11px] transition-colors"
+                      >
+                        Re-run Tests
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
