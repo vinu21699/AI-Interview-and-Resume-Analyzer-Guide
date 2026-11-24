@@ -61,19 +61,19 @@ function TaglineReveal({ text }) {
   const words = text.split(' ');
 
   return (
-    <div ref={containerRef} className="py-24 sm:py-32 max-w-4xl mx-auto px-6 text-center relative z-10">
-      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full gloss-pill text-xs font-mono text-emerald-400 mb-6">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <div ref={containerRef} className="py-16 sm:py-20 max-w-3xl mx-auto px-6 text-center relative z-10">
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full gloss-pill text-xs font-mono text-emerald-400 mb-5">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>The core premise</span>
       </div>
-      <p className="text-2xl sm:text-4xl md:text-5xl font-semibold leading-tight text-balance tracking-tight">
+      <p className="text-lg sm:text-xl md:text-2xl font-normal sm:font-medium leading-relaxed text-balance tracking-normal text-slate-200">
         {words.map((word, index) => {
           const wordProgress = (index + 1) / words.length;
           const isLit = prefersReducedMotion || progress >= wordProgress * 0.85;
           return (
             <span
               key={index}
-              className={`inline-block mr-[0.28em] transition-colors duration-500 ease-snappy ${
+              className={`inline-block mr-[0.25em] transition-colors duration-500 ease-snappy ${
                 isLit ? 'text-white' : 'text-white/20'
               }`}
             >

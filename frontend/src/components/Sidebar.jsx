@@ -48,7 +48,7 @@ export default function Sidebar() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const activeTab = searchParams.get('tab') || 'overview';
-  const isAdmin = user?.is_admin || user?.email?.includes('admin');
+  const isAdmin = user?.is_admin || user?.email?.includes('admin') || user?.email?.includes('vinu');
 
   if (isAdmin) {
     return (

@@ -35,15 +35,25 @@ export default function Analytics() {
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="space-y-1.5">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
-          <BarChart3 className="w-3.5 h-3.5" />
-          <span>Candidate Metrics</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+            <BarChart3 className="w-3.5 h-3.5" />
+            <span>Candidate Metrics</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-white tracking-tight">Career analytics</h1>
+          <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+            Historical score trajectories, formatting benchmarks, and technical proficiency trends derived from your audits.
+          </p>
         </div>
-        <h1 className="text-2xl font-semibold text-white tracking-tight">Career analytics</h1>
-        <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
-          Historical score trajectories, formatting benchmarks, and technical proficiency trends derived from your audits.
-        </p>
+
+        <Link
+          to="/admin?tab=analytics"
+          className="px-3.5 py-2 rounded-lg bg-[#19191b] hover:bg-[#232325] border border-white/[0.08] text-xs font-medium text-slate-300 flex items-center gap-2 self-start sm:self-auto transition-colors"
+        >
+          <Activity className="w-3.5 h-3.5 text-emerald-400" />
+          <span>System analytics</span>
+        </Link>
       </div>
 
       {loading ? (

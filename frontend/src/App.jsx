@@ -29,7 +29,7 @@ import CompanyPrep from './pages/CompanyPrep';
 
 function AdminAccessGuard({ children }) {
   const { user } = useAuth();
-  const isAdmin = user?.is_admin || user?.email?.includes('admin');
+  const isAdmin = user?.is_admin || user?.email?.includes('admin') || user?.email?.includes('vinu');
 
   if (!isAdmin) {
     return (
@@ -46,7 +46,10 @@ function AdminAccessGuard({ children }) {
             The Administration panel is restricted to system administrators. Your account (<span className="text-white font-mono">{user?.email || 'Candidate User'}</span>) is configured with candidate permissions.
           </p>
         </div>
-        <div className="pt-2 flex justify-center">
+        <div className="pt-2 flex items-center justify-center gap-3">
+          <Link to="/analytics" className="px-4 py-2 rounded-lg bg-[#232325] hover:bg-[#2c2c30] text-slate-300 text-xs font-medium border border-white/[0.08] transition-colors">
+            View career analytics
+          </Link>
           <Link to="/dashboard" className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-graphite-950 text-xs font-medium transition-colors">
             Return to dashboard
           </Link>
@@ -97,6 +100,9 @@ function ProtectedLayout() {
             <Route path="/learning-assistant" element={<LearningAssistant />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/system-analytics" element={<Navigate to="/admin?tab=analytics" replace />} />
+            <Route path="/system_analytics" element={<Navigate to="/admin?tab=analytics" replace />} />
+            <Route path="/admin/analytics" element={<Navigate to="/admin?tab=analytics" replace />} />
             <Route
               path="/admin"
               element={

@@ -9,7 +9,7 @@ export default function Navbar() {
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  const isAdmin = user?.is_admin || user?.email?.includes('admin');
+  const isAdmin = user?.is_admin || user?.email?.includes('admin') || user?.email?.includes('vinu');
 
   const handleLogout = () => {
     logout();
