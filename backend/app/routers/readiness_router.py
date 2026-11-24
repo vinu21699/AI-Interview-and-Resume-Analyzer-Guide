@@ -30,41 +30,66 @@ def get_readiness_score(
     latest_resume_analysis = db.query(ResumeAnalysis).filter(
         ResumeAnalysis.user_id == current_user.id
     ).order_by(ResumeAnalysis.id.desc()).first()
-    resume_score = latest_resume_analysis.ats_score if latest_resume_analysis else 75
 
     # 2. DSA & Coding Score
     coding_tests = db.query(CodingTest).filter(CodingTest.user_id == current_user.id).all()
-    if coding_tests:
-        passed = sum(1 for t in coding_tests if t.status == "passed")
-        dsa_score = int((passed / len(coding_tests)) * 100)
-    else:
-        dsa_score = 62
 
-    # 3. SQL Score (based on DB/backend skills & checks)
-    sql_score = latest_resume_analysis.skills_score if latest_resume_analysis else 68
-
-    # 4. Technical Interview Score
+    # 3. Technical Interview Score
     interviews = db.query(InterviewSession).filter(
         InterviewSession.user_id == current_user.id,
         InterviewSession.status == "completed"
     ).all()
-    if interviews:
-        interview_score = int(sum(i.overall_score for i in interviews) / len(interviews))
-    else:
-        interview_score = 65
 
-    # 5. Project Defense Score
+    # 4. Project Defense Score
     defenses = db.query(ProjectDefenseSession).filter(
         ProjectDefenseSession.user_id == current_user.id,
         ProjectDefenseSession.status == "completed"
     ).all()
+
+    has_any_data = bool(latest_resume_analysis or coding_tests or interviews or defenses)
+
+    if not has_any_data:
+        return {
+            "placement_readiness": 0,
+            "verdict": "New candidate",
+            "is_new_candidate": True,
+            "breakdown": {
+                "Resume ATS": {"score": 0, "status": "Pending", "weight": 15},
+                "Data Structures & Algorithms": {"score": 0, "status": "Pending", "weight": 20},
+                "SQL & Database": {"score": 0, "status": "Pending", "weight": 15},
+                "Technical Interview": {"score": 0, "status": "Pending", "weight": 20},
+                "Project Defense": {"score": 0, "status": "Pending", "weight": 15},
+                "Communication": {"score": 0, "status": "Pending", "weight": 15}
+            },
+            "strengths": [],
+            "weaknesses": [],
+            "next_steps": [
+                "Upload your resume to calculate your baseline ATS score",
+                "Complete a 7-round project defense viva",
+                "Attempt a technical coding or interview session"
+            ]
+        }
+
+    resume_score = latest_resume_analysis.ats_score if latest_resume_analysis else 0
+    if coding_tests:
+        passed = sum(1 for t in coding_tests if t.status == "passed")
+        dsa_score = int((passed / len(coding_tests)) * 100)
+    else:
+        dsa_score = 0
+
+    sql_score = latest_resume_analysis.skills_score if latest_resume_analysis else 0
+
+    if interviews:
+        interview_score = int(sum(i.overall_score for i in interviews) / len(interviews))
+    else:
+        interview_score = 0
+
     if defenses:
         projects_score = int(sum(d.overall_score for d in defenses) / len(defenses))
     else:
-        projects_score = latest_resume_analysis.projects_score if latest_resume_analysis else 70
+        projects_score = latest_resume_analysis.projects_score if latest_resume_analysis else 0
 
-    # 6. Communication Score
-    communication_score = latest_resume_analysis.grammar_score if (latest_resume_analysis and hasattr(latest_resume_analysis, 'grammar_score')) else 78
+    communication_score = latest_resume_analysis.grammar_score if (latest_resume_analysis and hasattr(latest_resume_analysis, 'grammar_score')) else 0
 
     result = compute_placement_readiness(
         resume_score=resume_score,
@@ -74,6 +99,7 @@ def get_readiness_score(
         projects_score=projects_score,
         communication_score=communication_score
     )
+    result["is_new_candidate"] = False
 
     # Automatically save a readiness snapshot for historical tracking if none recently
     existing_snap = db.query(ReadinessSnapshot).filter(
@@ -111,6 +137,35 @@ def get_weakness_radar(
     coding_count = db.query(CodingTest).filter(CodingTest.user_id == current_user.id).count()
     interview_count = db.query(InterviewSession).filter(InterviewSession.user_id == current_user.id).count()
     defense_count = db.query(ProjectDefenseSession).filter(ProjectDefenseSession.user_id == current_user.id).count()
+    latest_resume = db.query(ResumeAnalysis).filter(ResumeAnalysis.user_id == current_user.id).first()
+
+    has_any_data = bool(latest_resume or coding_count > 0 or interview_count > 0 or defense_count > 0)
+
+    if not has_any_data:
+        categories = [
+            {
+                "name": cat,
+                "score": 0,
+                "status": "Pending assessment",
+                "color": "gray",
+                "strongest_topic": "Pending assessment",
+                "weakest_topic": "Pending assessment",
+                "diagnostic": f"No assessment data for {cat} yet. Take an interview or test to measure your skill level.",
+                "subtopics": []
+            }
+            for cat in ["DSA", "SQL", "Python", "Communication", "Technical Interview", "Projects", "Resume"]
+        ]
+        return {
+            "is_new_candidate": True,
+            "categories": categories,
+            "weakest_areas": [],
+            "strongest_areas": [],
+            "recommended_next_steps": [
+                "Upload your resume to calculate your baseline ATS score",
+                "Complete a 7-round project defense viva",
+                "Attempt a technical coding or interview session"
+            ]
+        }
 
     # Dynamic base taxonomy
     categories = [
@@ -378,21 +433,13 @@ def get_improvement_history(
     ).order_by(ReadinessSnapshot.id.asc()).all()
 
     if not snapshots:
-        # Seed initial baseline
-        init_snap = ReadinessSnapshot(
-            user_id=current_user.id,
-            overall_readiness=64,
-            resume_score=81,
-            dsa_score=42,
-            sql_score=61,
-            interview_score=48,
-            projects_score=66,
-            communication_score=79
-        )
-        db.add(init_snap)
-        db.commit()
-        db.refresh(init_snap)
-        snapshots = [init_snap]
+        return {
+            "snapshots": [],
+            "chart_data": [],
+            "is_new_candidate": True,
+            "latest": None,
+            "initial": None
+        }
 
     history_chart = []
     for idx, s in enumerate(snapshots):
@@ -407,6 +454,7 @@ def get_improvement_history(
     return {
         "snapshots": snapshots,
         "chart_data": history_chart,
+        "is_new_candidate": False,
         "latest": snapshots[-1],
         "initial": snapshots[0]
     }
