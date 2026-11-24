@@ -52,6 +52,22 @@ body {
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+/* landing-page-design tokens */
+.ease-snappy {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+.hero-heading-gradient {
+  background: linear-gradient(to right, #FFFFFF, #9B9B9B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 @layer utilities {
   /* Quiet Card Surfaces */
   .glass-card,
